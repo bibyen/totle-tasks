@@ -24,12 +24,13 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Goal.Visibility defines who can see this goal in social or private contexts.
 type Goal_Visibility int32
 
 const (
 	Goal_VISIBILITY_UNSPECIFIED Goal_Visibility = 0
-	Goal_VISIBILITY_PRIVATE     Goal_Visibility = 1
-	Goal_VISIBILITY_PUBLIC      Goal_Visibility = 2
+	Goal_VISIBILITY_PRIVATE     Goal_Visibility = 1 // Only the owner.
+	Goal_VISIBILITY_PUBLIC      Goal_Visibility = 2 // Visible to the community.
 )
 
 // Enum value maps for Goal_Visibility.
@@ -73,12 +74,15 @@ func (Goal_Visibility) EnumDescriptor() ([]byte, []int) {
 	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{0, 0}
 }
 
+// GetBingoCardRequest.BingoCardView controls the level of detail returned.
 type GetBingoCardRequest_BingoCardView int32
 
 const (
 	GetBingoCardRequest_BINGO_CARD_VIEW_UNSPECIFIED GetBingoCardRequest_BingoCardView = 0
-	GetBingoCardRequest_BINGO_CARD_VIEW_BASIC       GetBingoCardRequest_BingoCardView = 1
-	GetBingoCardRequest_BINGO_CARD_VIEW_FULL        GetBingoCardRequest_BingoCardView = 2
+	// BINGO_CARD_VIEW_BASIC returns the grid with only goal resource names.
+	GetBingoCardRequest_BINGO_CARD_VIEW_BASIC GetBingoCardRequest_BingoCardView = 1
+	// BINGO_CARD_VIEW_FULL returns the grid with goal_value objects fully populated.
+	GetBingoCardRequest_BINGO_CARD_VIEW_FULL GetBingoCardRequest_BingoCardView = 2
 )
 
 // Enum value maps for GetBingoCardRequest_BingoCardView.
@@ -122,14 +126,22 @@ func (GetBingoCardRequest_BingoCardView) EnumDescriptor() ([]byte, []int) {
 	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{10, 0}
 }
 
+// Goal represents a single task or objective a user wants to track.
 type Goal struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Completed     bool                   `protobuf:"varint,3,opt,name=completed,proto3" json:"completed,omitempty"`
-	IsAssigned    bool                   `protobuf:"varint,4,opt,name=is_assigned,json=isAssigned,proto3" json:"is_assigned,omitempty"`
-	Visibility    Goal_Visibility        `protobuf:"varint,5,opt,name=visibility,proto3,enum=totle_tasks.v1.Goal_Visibility" json:"visibility,omitempty"`
-	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Goal.name is the unique resource name of the goal. Format: goals/{goal}
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// Goal.title is the user-visible title or description of the goal.
+	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	// Goal.completed is the status indicating if the goal has been achieved.
+	Completed bool `protobuf:"varint,3,opt,name=completed,proto3" json:"completed,omitempty"`
+	// Goal.is_assigned indicates if this goal is currently placed on a BingoCard.
+	IsAssigned bool `protobuf:"varint,4,opt,name=is_assigned,json=isAssigned,proto3" json:"is_assigned,omitempty"`
+	// Goal.visibility is the current visibility state of the goal.
+	Visibility Goal_Visibility `protobuf:"varint,5,opt,name=visibility,proto3,enum=totle_tasks.v1.Goal_Visibility" json:"visibility,omitempty"`
+	// Goal.create_time is the timestamp when the goal was created.
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	// Goal.update_time is the timestamp when the goal was last updated.
 	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -214,12 +226,18 @@ func (x *Goal) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+// BingoCard is a 2D grid representation of multiple Goals for a specific calendar month.
 type BingoCard struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Grid          []*BingoCard_GridRow   `protobuf:"bytes,2,rep,name=grid,proto3" json:"grid,omitempty"`
-	Year          int32                  `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
-	Month         int32                  `protobuf:"varint,4,opt,name=month,proto3" json:"month,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// BingoCard.name is the resource name. Format: bingoCards/{bingo_card}
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// BingoCard.grid is the 2D array representing the bingo board.
+	Grid []*BingoCard_GridRow `protobuf:"bytes,2,rep,name=grid,proto3" json:"grid,omitempty"`
+	// BingoCard.year is the calendar year this card belongs to (e.g., 2026).
+	Year int32 `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
+	// BingoCard.month is the calendar month (1-12) this card belongs to.
+	Month int32 `protobuf:"varint,4,opt,name=month,proto3" json:"month,omitempty"`
+	// BingoCard.update_time is the last time the grid layout or assignments were modified.
 	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -290,11 +308,15 @@ func (x *BingoCard) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+// CreateGoalRequest contains parameters for creating a new goal.
 type CreateGoalRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Parent        string                 `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	Goal          *Goal                  `protobuf:"bytes,2,opt,name=goal,proto3" json:"goal,omitempty"`
-	GoalId        string                 `protobuf:"bytes,3,opt,name=goal_id,json=goalId,proto3" json:"goal_id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// CreateGoalRequest.parent is the parent resource (e.g., "users/123").
+	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	// CreateGoalRequest.goal is the Goal content to create.
+	Goal *Goal `protobuf:"bytes,2,opt,name=goal,proto3" json:"goal,omitempty"`
+	// CreateGoalRequest.goal_id is an optional client-generated ID for the goal.
+	GoalId        string `protobuf:"bytes,3,opt,name=goal_id,json=goalId,proto3" json:"goal_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -350,6 +372,7 @@ func (x *CreateGoalRequest) GetGoalId() string {
 	return ""
 }
 
+// CreateGoalResponse contains the created Goal.
 type CreateGoalResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Goal          *Goal                  `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
@@ -394,9 +417,11 @@ func (x *CreateGoalResponse) GetGoal() *Goal {
 	return nil
 }
 
+// GetGoalRequest contains parameters for fetching a single goal by name.
 type GetGoalRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// GetGoalRequest.name is the resource name of the goal to retrieve.
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -438,10 +463,10 @@ func (x *GetGoalRequest) GetName() string {
 	return ""
 }
 
+// GetGoalResponse wraps the retrieved Goal resource.
 type GetGoalResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The Goal resource requested.
-	Goal          *Goal `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Goal          *Goal                  `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -483,12 +508,17 @@ func (x *GetGoalResponse) GetGoal() *Goal {
 	return nil
 }
 
+// ListGoalsRequest contains parameters for listing and filtering goals.
 type ListGoalsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Parent        string                 `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	Filter        string                 `protobuf:"bytes,4,opt,name=filter,proto3" json:"filter,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ListGoalsRequest.parent is the parent resource to list goals from.
+	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	// ListGoalsRequest.page_size is the max number of goals to return.
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// ListGoalsRequest.page_token is the token for the next set of results.
+	PageToken string `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	// ListGoalsRequest.filter is the filter string to narrow down results.
+	Filter        string `protobuf:"bytes,4,opt,name=filter,proto3" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -551,6 +581,7 @@ func (x *ListGoalsRequest) GetFilter() string {
 	return ""
 }
 
+// ListGoalsResponse returns a list of goals and pagination metadata.
 type ListGoalsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Goals         []*Goal                `protobuf:"bytes,1,rep,name=goals,proto3" json:"goals,omitempty"`
@@ -603,9 +634,12 @@ func (x *ListGoalsResponse) GetNextPageToken() string {
 	return ""
 }
 
+// UpdateGoalRequest contains parameters for modifying an existing goal.
 type UpdateGoalRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Goal          *Goal                  `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UpdateGoalRequest.goal is the goal resource state to update.
+	Goal *Goal `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
+	// UpdateGoalRequest.update_mask is the list of fields to be updated.
 	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -655,6 +689,7 @@ func (x *UpdateGoalRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
+// UpdateGoalResponse returns the updated Goal.
 type UpdateGoalResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Goal          *Goal                  `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
@@ -699,10 +734,12 @@ func (x *UpdateGoalResponse) GetGoal() *Goal {
 	return nil
 }
 
-// --- BINGO ---
+// GetBingoCardRequest contains parameters for retrieving a bingo card.
 type GetBingoCardRequest struct {
-	state         protoimpl.MessageState            `protogen:"open.v1"`
-	Name          string                            `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// GetBingoCardRequest.name is the resource name of the bingo card.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// GetBingoCardRequest.view is the detail level of the returned BingoCard.
 	View          GetBingoCardRequest_BingoCardView `protobuf:"varint,2,opt,name=view,proto3,enum=totle_tasks.v1.GetBingoCardRequest_BingoCardView" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -752,10 +789,10 @@ func (x *GetBingoCardRequest) GetView() GetBingoCardRequest_BingoCardView {
 	return GetBingoCardRequest_BINGO_CARD_VIEW_UNSPECIFIED
 }
 
+// GetBingoCardResponse wraps the retrieved BingoCard resource.
 type GetBingoCardResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The bingo card resource.
-	BingoCard     *BingoCard `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -797,9 +834,12 @@ func (x *GetBingoCardResponse) GetBingoCard() *BingoCard {
 	return nil
 }
 
+// UpdateBingoCardRequest contains parameters for modifying a bingo card layout.
 type UpdateBingoCardRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UpdateBingoCardRequest.bingo_card is the bingo card state to update.
+	BingoCard *BingoCard `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	// UpdateBingoCardRequest.update_mask is the list of fields to be updated.
 	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -849,6 +889,7 @@ func (x *UpdateBingoCardRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
+// UpdateBingoCardResponse returns the updated BingoCard.
 type UpdateBingoCardResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
@@ -893,9 +934,11 @@ func (x *UpdateBingoCardResponse) GetBingoCard() *BingoCard {
 	return nil
 }
 
+// DeleteGoalRequest contains parameters for deleting a goal.
 type DeleteGoalRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// DeleteGoalRequest.name is the resource name of the goal to delete.
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -937,7 +980,7 @@ func (x *DeleteGoalRequest) GetName() string {
 	return ""
 }
 
-// Even if this is empty now, it follows the standard!
+// DeleteGoalResponse is an empty response for successful deletion.
 type DeleteGoalResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -974,10 +1017,13 @@ func (*DeleteGoalResponse) Descriptor() ([]byte, []int) {
 	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{15}
 }
 
+// BingoCard.Slot is a single cell in the bingo grid.
 type BingoCard_Slot struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Goal          string                 `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
-	GoalValue     *Goal                  `protobuf:"bytes,2,opt,name=goal_value,json=goalValue,proto3" json:"goal_value,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// BingoCard.Slot.goal is the resource name of the Goal linked to this slot.
+	Goal string `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
+	// BingoCard.Slot.goal_value is the expanded Goal details, populated in FULL view.
+	GoalValue     *Goal `protobuf:"bytes,2,opt,name=goal_value,json=goalValue,proto3" json:"goal_value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1026,6 +1072,7 @@ func (x *BingoCard_Slot) GetGoalValue() *Goal {
 	return nil
 }
 
+// BingoCard.GridRow is a horizontal row of slots within the Bingo grid.
 type BingoCard_GridRow struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Slots         []*BingoCard_Slot      `protobuf:"bytes,1,rep,name=slots,proto3" json:"slots,omitempty"`

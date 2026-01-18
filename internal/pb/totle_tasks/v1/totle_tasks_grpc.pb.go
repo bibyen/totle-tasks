@@ -29,11 +29,18 @@ const (
 // GoalServiceClient is the client API for GoalService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GoalService manages individual user objectives and CRUD operations for goal tracking.
 type GoalServiceClient interface {
+	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error)
+	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*GetGoalResponse, error)
+	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(ctx context.Context, in *ListGoalsRequest, opts ...grpc.CallOption) (*ListGoalsResponse, error)
+	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*UpdateGoalResponse, error)
+	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*DeleteGoalResponse, error)
 }
 
@@ -98,11 +105,18 @@ func (c *goalServiceClient) DeleteGoal(ctx context.Context, in *DeleteGoalReques
 // GoalServiceServer is the server API for GoalService service.
 // All implementations must embed UnimplementedGoalServiceServer
 // for forward compatibility.
+//
+// GoalService manages individual user objectives and CRUD operations for goal tracking.
 type GoalServiceServer interface {
+	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error)
+	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(context.Context, *GetGoalRequest) (*GetGoalResponse, error)
+	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(context.Context, *ListGoalsRequest) (*ListGoalsResponse, error)
+	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(context.Context, *UpdateGoalRequest) (*UpdateGoalResponse, error)
+	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(context.Context, *DeleteGoalRequest) (*DeleteGoalResponse, error)
 	mustEmbedUnimplementedGoalServiceServer()
 }
@@ -280,8 +294,12 @@ const (
 // BingoServiceClient is the client API for BingoService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 type BingoServiceClient interface {
+	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error)
+	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*UpdateBingoCardResponse, error)
 }
 
@@ -316,8 +334,12 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBing
 // BingoServiceServer is the server API for BingoService service.
 // All implementations must embed UnimplementedBingoServiceServer
 // for forward compatibility.
+//
+// BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 type BingoServiceServer interface {
+	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error)
+	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*UpdateBingoCardResponse, error)
 	mustEmbedUnimplementedBingoServiceServer()
 }
