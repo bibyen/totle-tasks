@@ -1,5 +1,7 @@
-version: v1
-name: buf.build/bibyen/totle-tasks
+version: v2
+modules:
+  - path: proto
+    name: buf.build/bibyen/totle-tasks
 deps:
   - buf.build/googleapis/googleapis
 lint:
