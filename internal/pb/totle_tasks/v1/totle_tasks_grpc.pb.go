@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: v1/totle_tasks.proto
+// source: totle_tasks/v1/totle_tasks.proto
 
 package totletasksv1
 
@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,38 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	GoalService_CreateGoal_FullMethodName         = "/totle_tasks.v1.GoalService/CreateGoal"
-	GoalService_GetGoal_FullMethodName            = "/totle_tasks.v1.GoalService/GetGoal"
-	GoalService_ListAvailableGoals_FullMethodName = "/totle_tasks.v1.GoalService/ListAvailableGoals"
-	GoalService_BatchGetGoals_FullMethodName      = "/totle_tasks.v1.GoalService/BatchGetGoals"
-	GoalService_UpdateGoal_FullMethodName         = "/totle_tasks.v1.GoalService/UpdateGoal"
-	GoalService_DeleteGoal_FullMethodName         = "/totle_tasks.v1.GoalService/DeleteGoal"
+	GoalService_CreateGoal_FullMethodName = "/totle_tasks.v1.GoalService/CreateGoal"
+	GoalService_GetGoal_FullMethodName    = "/totle_tasks.v1.GoalService/GetGoal"
+	GoalService_ListGoals_FullMethodName  = "/totle_tasks.v1.GoalService/ListGoals"
+	GoalService_UpdateGoal_FullMethodName = "/totle_tasks.v1.GoalService/UpdateGoal"
+	GoalService_DeleteGoal_FullMethodName = "/totle_tasks.v1.GoalService/DeleteGoal"
 )
 
 // GoalServiceClient is the client API for GoalService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// ==========================================
-// GOAL SERVICE
-// Handles the lifecycle of individual tasks.
-// ==========================================
 type GoalServiceClient interface {
-	// Creates a new goal for the user's bank.
-	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*Goal, error)
-	// Retrieves a specific goal by resource name.
-	GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*Goal, error)
-	// Lists only goals that are NOT currently assigned to any BingoCard.
-	// This powers the "Available Tasks" picker in the UI.
-	ListAvailableGoals(ctx context.Context, in *ListAvailableGoalsRequest, opts ...grpc.CallOption) (*ListAvailableGoalsResponse, error)
-	// Retrieves multiple goals in one round-trip.
-	// Used by BingoService to hydrate the grid layout.
-	BatchGetGoals(ctx context.Context, in *BatchGetGoalsRequest, opts ...grpc.CallOption) (*BatchGetGoalsResponse, error)
-	// Updates goal details (title, completion, etc.) using a FieldMask.
-	UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*Goal, error)
-	// Deletes a goal.
-	// Validation: Implementation must reject deletion if goal.is_assigned is true.
-	DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error)
+	GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*GetGoalResponse, error)
+	ListGoals(ctx context.Context, in *ListGoalsRequest, opts ...grpc.CallOption) (*ListGoalsResponse, error)
+	UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*UpdateGoalResponse, error)
+	DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*DeleteGoalResponse, error)
 }
 
 type goalServiceClient struct {
@@ -62,9 +45,9 @@ func NewGoalServiceClient(cc grpc.ClientConnInterface) GoalServiceClient {
 	return &goalServiceClient{cc}
 }
 
-func (c *goalServiceClient) CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*Goal, error) {
+func (c *goalServiceClient) CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Goal)
+	out := new(CreateGoalResponse)
 	err := c.cc.Invoke(ctx, GoalService_CreateGoal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -72,9 +55,9 @@ func (c *goalServiceClient) CreateGoal(ctx context.Context, in *CreateGoalReques
 	return out, nil
 }
 
-func (c *goalServiceClient) GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*Goal, error) {
+func (c *goalServiceClient) GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*GetGoalResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Goal)
+	out := new(GetGoalResponse)
 	err := c.cc.Invoke(ctx, GoalService_GetGoal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -82,29 +65,19 @@ func (c *goalServiceClient) GetGoal(ctx context.Context, in *GetGoalRequest, opt
 	return out, nil
 }
 
-func (c *goalServiceClient) ListAvailableGoals(ctx context.Context, in *ListAvailableGoalsRequest, opts ...grpc.CallOption) (*ListAvailableGoalsResponse, error) {
+func (c *goalServiceClient) ListGoals(ctx context.Context, in *ListGoalsRequest, opts ...grpc.CallOption) (*ListGoalsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAvailableGoalsResponse)
-	err := c.cc.Invoke(ctx, GoalService_ListAvailableGoals_FullMethodName, in, out, cOpts...)
+	out := new(ListGoalsResponse)
+	err := c.cc.Invoke(ctx, GoalService_ListGoals_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *goalServiceClient) BatchGetGoals(ctx context.Context, in *BatchGetGoalsRequest, opts ...grpc.CallOption) (*BatchGetGoalsResponse, error) {
+func (c *goalServiceClient) UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*UpdateGoalResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchGetGoalsResponse)
-	err := c.cc.Invoke(ctx, GoalService_BatchGetGoals_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *goalServiceClient) UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*Goal, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Goal)
+	out := new(UpdateGoalResponse)
 	err := c.cc.Invoke(ctx, GoalService_UpdateGoal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -112,9 +85,9 @@ func (c *goalServiceClient) UpdateGoal(ctx context.Context, in *UpdateGoalReques
 	return out, nil
 }
 
-func (c *goalServiceClient) DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *goalServiceClient) DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*DeleteGoalResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(DeleteGoalResponse)
 	err := c.cc.Invoke(ctx, GoalService_DeleteGoal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -125,27 +98,12 @@ func (c *goalServiceClient) DeleteGoal(ctx context.Context, in *DeleteGoalReques
 // GoalServiceServer is the server API for GoalService service.
 // All implementations must embed UnimplementedGoalServiceServer
 // for forward compatibility.
-//
-// ==========================================
-// GOAL SERVICE
-// Handles the lifecycle of individual tasks.
-// ==========================================
 type GoalServiceServer interface {
-	// Creates a new goal for the user's bank.
-	CreateGoal(context.Context, *CreateGoalRequest) (*Goal, error)
-	// Retrieves a specific goal by resource name.
-	GetGoal(context.Context, *GetGoalRequest) (*Goal, error)
-	// Lists only goals that are NOT currently assigned to any BingoCard.
-	// This powers the "Available Tasks" picker in the UI.
-	ListAvailableGoals(context.Context, *ListAvailableGoalsRequest) (*ListAvailableGoalsResponse, error)
-	// Retrieves multiple goals in one round-trip.
-	// Used by BingoService to hydrate the grid layout.
-	BatchGetGoals(context.Context, *BatchGetGoalsRequest) (*BatchGetGoalsResponse, error)
-	// Updates goal details (title, completion, etc.) using a FieldMask.
-	UpdateGoal(context.Context, *UpdateGoalRequest) (*Goal, error)
-	// Deletes a goal.
-	// Validation: Implementation must reject deletion if goal.is_assigned is true.
-	DeleteGoal(context.Context, *DeleteGoalRequest) (*emptypb.Empty, error)
+	CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error)
+	GetGoal(context.Context, *GetGoalRequest) (*GetGoalResponse, error)
+	ListGoals(context.Context, *ListGoalsRequest) (*ListGoalsResponse, error)
+	UpdateGoal(context.Context, *UpdateGoalRequest) (*UpdateGoalResponse, error)
+	DeleteGoal(context.Context, *DeleteGoalRequest) (*DeleteGoalResponse, error)
 	mustEmbedUnimplementedGoalServiceServer()
 }
 
@@ -156,22 +114,19 @@ type GoalServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGoalServiceServer struct{}
 
-func (UnimplementedGoalServiceServer) CreateGoal(context.Context, *CreateGoalRequest) (*Goal, error) {
+func (UnimplementedGoalServiceServer) CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGoal not implemented")
 }
-func (UnimplementedGoalServiceServer) GetGoal(context.Context, *GetGoalRequest) (*Goal, error) {
+func (UnimplementedGoalServiceServer) GetGoal(context.Context, *GetGoalRequest) (*GetGoalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGoal not implemented")
 }
-func (UnimplementedGoalServiceServer) ListAvailableGoals(context.Context, *ListAvailableGoalsRequest) (*ListAvailableGoalsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAvailableGoals not implemented")
+func (UnimplementedGoalServiceServer) ListGoals(context.Context, *ListGoalsRequest) (*ListGoalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListGoals not implemented")
 }
-func (UnimplementedGoalServiceServer) BatchGetGoals(context.Context, *BatchGetGoalsRequest) (*BatchGetGoalsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BatchGetGoals not implemented")
-}
-func (UnimplementedGoalServiceServer) UpdateGoal(context.Context, *UpdateGoalRequest) (*Goal, error) {
+func (UnimplementedGoalServiceServer) UpdateGoal(context.Context, *UpdateGoalRequest) (*UpdateGoalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateGoal not implemented")
 }
-func (UnimplementedGoalServiceServer) DeleteGoal(context.Context, *DeleteGoalRequest) (*emptypb.Empty, error) {
+func (UnimplementedGoalServiceServer) DeleteGoal(context.Context, *DeleteGoalRequest) (*DeleteGoalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteGoal not implemented")
 }
 func (UnimplementedGoalServiceServer) mustEmbedUnimplementedGoalServiceServer() {}
@@ -231,38 +186,20 @@ func _GoalService_GetGoal_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GoalService_ListAvailableGoals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAvailableGoalsRequest)
+func _GoalService_ListGoals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGoalsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GoalServiceServer).ListAvailableGoals(ctx, in)
+		return srv.(GoalServiceServer).ListGoals(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GoalService_ListAvailableGoals_FullMethodName,
+		FullMethod: GoalService_ListGoals_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalServiceServer).ListAvailableGoals(ctx, req.(*ListAvailableGoalsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _GoalService_BatchGetGoals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchGetGoalsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GoalServiceServer).BatchGetGoals(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GoalService_BatchGetGoals_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalServiceServer).BatchGetGoals(ctx, req.(*BatchGetGoalsRequest))
+		return srv.(GoalServiceServer).ListGoals(ctx, req.(*ListGoalsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -319,12 +256,8 @@ var GoalService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GoalService_GetGoal_Handler,
 		},
 		{
-			MethodName: "ListAvailableGoals",
-			Handler:    _GoalService_ListAvailableGoals_Handler,
-		},
-		{
-			MethodName: "BatchGetGoals",
-			Handler:    _GoalService_BatchGetGoals_Handler,
+			MethodName: "ListGoals",
+			Handler:    _GoalService_ListGoals_Handler,
 		},
 		{
 			MethodName: "UpdateGoal",
@@ -336,7 +269,7 @@ var GoalService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "v1/totle_tasks.proto",
+	Metadata: "totle_tasks/v1/totle_tasks.proto",
 }
 
 const (
@@ -347,17 +280,9 @@ const (
 // BingoServiceClient is the client API for BingoService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// ==========================================
-// BINGO SERVICE
-// Handles the monthly grid arrangement and hydration.
-// ==========================================
 type BingoServiceClient interface {
-	// Retrieves the card for a specific month (YYYY-MM).
-	// Use View.FULL to populate goal_data in the response via BatchGetGoals.
-	GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*BingoCard, error)
-	// Updates the grid configuration (assigning/moving goals).
-	UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*BingoCard, error)
+	GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error)
+	UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*UpdateBingoCardResponse, error)
 }
 
 type bingoServiceClient struct {
@@ -368,9 +293,9 @@ func NewBingoServiceClient(cc grpc.ClientConnInterface) BingoServiceClient {
 	return &bingoServiceClient{cc}
 }
 
-func (c *bingoServiceClient) GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*BingoCard, error) {
+func (c *bingoServiceClient) GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BingoCard)
+	out := new(GetBingoCardResponse)
 	err := c.cc.Invoke(ctx, BingoService_GetBingoCard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -378,9 +303,9 @@ func (c *bingoServiceClient) GetBingoCard(ctx context.Context, in *GetBingoCardR
 	return out, nil
 }
 
-func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*BingoCard, error) {
+func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*UpdateBingoCardResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BingoCard)
+	out := new(UpdateBingoCardResponse)
 	err := c.cc.Invoke(ctx, BingoService_UpdateBingoCard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -391,17 +316,9 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBing
 // BingoServiceServer is the server API for BingoService service.
 // All implementations must embed UnimplementedBingoServiceServer
 // for forward compatibility.
-//
-// ==========================================
-// BINGO SERVICE
-// Handles the monthly grid arrangement and hydration.
-// ==========================================
 type BingoServiceServer interface {
-	// Retrieves the card for a specific month (YYYY-MM).
-	// Use View.FULL to populate goal_data in the response via BatchGetGoals.
-	GetBingoCard(context.Context, *GetBingoCardRequest) (*BingoCard, error)
-	// Updates the grid configuration (assigning/moving goals).
-	UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*BingoCard, error)
+	GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error)
+	UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*UpdateBingoCardResponse, error)
 	mustEmbedUnimplementedBingoServiceServer()
 }
 
@@ -412,10 +329,10 @@ type BingoServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBingoServiceServer struct{}
 
-func (UnimplementedBingoServiceServer) GetBingoCard(context.Context, *GetBingoCardRequest) (*BingoCard, error) {
+func (UnimplementedBingoServiceServer) GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBingoCard not implemented")
 }
-func (UnimplementedBingoServiceServer) UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*BingoCard, error) {
+func (UnimplementedBingoServiceServer) UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*UpdateBingoCardResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBingoCard not implemented")
 }
 func (UnimplementedBingoServiceServer) mustEmbedUnimplementedBingoServiceServer() {}
@@ -492,5 +409,5 @@ var BingoService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "v1/totle_tasks.proto",
+	Metadata: "totle_tasks/v1/totle_tasks.proto",
 }

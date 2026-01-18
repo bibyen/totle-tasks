@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+package totle_tasks.v1;
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1;totletasksv1";
+
+service GoalService {
+  rpc CreateGoal(CreateGoalRequest) returns (CreateGoalResponse);
+  rpc GetGoal(GetGoalRequest) returns (GetGoalResponse); // Get usually returns the resource directly
+  rpc ListGoals(ListGoalsRequest) returns (ListGoalsResponse);
+  rpc UpdateGoal(UpdateGoalRequest) returns (UpdateGoalResponse);
+  rpc DeleteGoal(DeleteGoalRequest) returns (DeleteGoalResponse);
+}
+
+service BingoService {
+  rpc GetBingoCard(GetBingoCardRequest) returns (GetBingoCardResponse);
+  rpc UpdateBingoCard(UpdateBingoCardRequest) returns (UpdateBingoCardResponse);
+}
+
+/*
+ * =========================
+ * Resources (Nouns)
+ * =========================
+ */
+
+message Goal {
+  option (google.api.resource) = {
+    type: "totletasks.googleapis.com/Goal"
+    pattern: "goals/{goal}"
+  };
+
+  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+  string title = 2 [(google.api.field_behavior) = REQUIRED];
+  bool completed = 3;
+  bool is_assigned = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  enum Visibility {
+    VISIBILITY_UNSPECIFIED = 0;
+    VISIBILITY_PRIVATE = 1;
+    VISIBILITY_PUBLIC = 2;
+  }
+  Visibility visibility = 5;
+
+  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+  google.protobuf.Timestamp update_time = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+
+message BingoCard {
+  option (google.api.resource) = {
+    type: "totletasks.googleapis.com/BingoCard"
+    pattern: "bingoCards/{bingo_card}"
+  };
+
+  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  message Slot {
+    string goal = 1 [(google.api.resource_reference).type = "totletasks.googleapis.com/Goal"];
+    Goal goal_value = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+  }
+
+  message GridRow {
+    repeated Slot slots = 1;
+  }
+
+  repeated GridRow grid = 2;
+  int32 year = 3 [(google.api.field_behavior) = IMMUTABLE];
+  int32 month = 4 [(google.api.field_behavior) = IMMUTABLE];
+  google.protobuf.Timestamp update_time = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+
+/*
+ * =========================
+ * Request/Response Messages
+ * =========================
+ */
+
+message CreateGoalRequest {
+  string parent = 1 [(google.api.field_behavior) = REQUIRED];
+  Goal goal = 2 [(google.api.field_behavior) = REQUIRED];
+  string goal_id = 3;
+}
+
+message CreateGoalResponse {
+  Goal goal = 1;
+}
+
+message GetGoalRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference).type = "totletasks.googleapis.com/Goal"
+  ];
+}
+
+message GetGoalResponse {
+  // The Goal resource requested.
+  Goal goal = 1;
+}
+
+message ListGoalsRequest {
+  string parent = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+}
+
+message ListGoalsResponse {
+  repeated Goal goals = 1;
+  string next_page_token = 2;
+}
+
+message UpdateGoalRequest {
+  Goal goal = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message UpdateGoalResponse {
+  Goal goal = 1;
+}
+
+// --- BINGO ---
+message GetBingoCardRequest {
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+  enum BingoCardView {
+    BINGO_CARD_VIEW_UNSPECIFIED = 0;
+    BINGO_CARD_VIEW_BASIC = 1;
+    BINGO_CARD_VIEW_FULL = 2;
+  }
+  BingoCardView view = 2;
+}
+
+message GetBingoCardResponse {
+  // The bingo card resource.
+  BingoCard bingo_card = 1;
+}
+
+message UpdateBingoCardRequest {
+  BingoCard bingo_card = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message UpdateBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+message DeleteGoalRequest {
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Even if this is empty now, it follows the standard!
+message DeleteGoalResponse {}
+
