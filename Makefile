@@ -51,12 +51,12 @@ db/up:
 
 ## db/load-schema: Push local schema.sql into the dev database
 db/load-schema:
-	@echo "📂 Loading schema from $(SCHEMA_FILE)..."
+	@echo "Loading schema from $(SCHEMA_FILE)..."
 	@docker exec -i $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) < $(SCHEMA_FILE)
 
 ## db/init-test: Create test DB if missing and load schema
 db/init-test:
-	@echo "🧪 Initializing test database from $(SCHEMA_FILE)..."
+	@echo "Initializing test database from $(SCHEMA_FILE)..."
 	@docker exec -it $(DB_CONTAINER) psql -U $(DB_USER) -tc "SELECT 1 FROM pg_database WHERE datname = '$(DB_TEST_NAME)'" | grep -q 1 || \
 		docker exec -it $(DB_CONTAINER) psql -U $(DB_USER) -c "CREATE DATABASE $(DB_TEST_NAME);"
 	@docker exec -i $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_TEST_NAME) < $(SCHEMA_FILE)
