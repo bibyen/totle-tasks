@@ -2,6 +2,12 @@ package domain
 
 import "time"
 
+// GoalVisibility levels
+const (
+	GoalVisibilityPrivate = 1
+	GoalVisibilityPublic  = 3
+)
+
 type Goal struct {
 	ID         string
 	UserID     string
