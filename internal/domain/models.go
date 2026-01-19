@@ -15,6 +15,7 @@ type Goal struct {
 	Completed  bool
 	Visibility int
 	IsActive   bool
+	IsAssigned bool
 	CreateTime time.Time
 	UpdateTime time.Time
 }
