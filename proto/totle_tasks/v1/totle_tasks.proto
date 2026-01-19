@@ -61,20 +61,25 @@ message Goal {
   // Goal.is_assigned indicates if this goal is currently placed on a BingoCard.
   bool is_assigned = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
 
-  // Goal.Visibility defines who can see this goal in social or private contexts.
+  // Goal.Visibility defines the privacy levels allowed for this resource.
   enum Visibility {
     VISIBILITY_UNSPECIFIED = 0;
     VISIBILITY_PRIVATE = 1; // Only the owner.
-    VISIBILITY_PUBLIC = 2;  // Visible to the community.
+    VISIBILITY_FRIENDS = 2; // Visible to accepted friends.
+    VISIBILITY_PUBLIC = 3;  // Visible to the community.
   }
-  // Goal.visibility is the current visibility state of the goal.
+  // Goal.visibility determines who can see this goal in social contexts.
   Visibility visibility = 5;
 
+  // Goal.is_archived indicates if the goal has been soft-deleted (is_active = false).
+  // Archived goals remain in the system to preserve Bingo history.
+  bool is_archived = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+
   // Goal.create_time is the timestamp when the goal was created.
-  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+  google.protobuf.Timestamp create_time = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
   
   // Goal.update_time is the timestamp when the goal was last updated.
-  google.protobuf.Timestamp update_time = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
+  google.protobuf.Timestamp update_time = 8 [(google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 // BingoCard is a 2D grid representation of multiple Goals for a specific calendar month.
@@ -84,34 +89,23 @@ message BingoCard {
     pattern: "bingoCards/{bingo_card}"
   };
 
-  // BingoCard.name is the resource name. Format: bingoCards/{bingo_card}
-  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
-
-  // BingoCard.Slot is a single cell in the bingo grid.
+  string name = 1;
+  
   message Slot {
-    // BingoCard.Slot.goal is the resource name of the Goal linked to this slot.
-    string goal = 1 [(google.api.resource_reference).type = "totletasks.googleapis.com/Goal"];
-    
-    // BingoCard.Slot.goal_value is the expanded Goal details, populated in FULL view.
-    Goal goal_value = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+    string goal = 1;
+    Goal goal_value = 2;
   }
 
-  // BingoCard.GridRow is a horizontal row of slots within the Bingo grid.
   message GridRow {
     repeated Slot slots = 1;
   }
 
-  // BingoCard.grid is the 2D array representing the bingo board.
   repeated GridRow grid = 2;
-  
-  // BingoCard.year is the calendar year this card belongs to (e.g., 2026).
-  int32 year = 3 [(google.api.field_behavior) = IMMUTABLE];
-  
-  // BingoCard.month is the calendar month (1-12) this card belongs to.
-  int32 month = 4 [(google.api.field_behavior) = IMMUTABLE];
-  
-  // BingoCard.update_time is the last time the grid layout or assignments were modified.
-  google.protobuf.Timestamp update_time = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+  int32 year = 3;
+  int32 month = 4;
+  google.protobuf.Timestamp update_time = 5;
+  // Added create_time
+  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 /*
@@ -230,3 +224,6 @@ message DeleteGoalRequest {
 
 // DeleteGoalResponse is an empty response for successful deletion.
 message DeleteGoalResponse {}
+
+// TODO: Implement SocialService to manage Friendships and Peer discovery.
+// This will enable the VISIBILITY_FRIENDS logic for Goals.
