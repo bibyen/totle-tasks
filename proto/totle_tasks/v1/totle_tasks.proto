@@ -29,6 +29,9 @@ service GoalService {
 
 // BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 service BingoService {
+  // BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+  rpc CreateBingoCard(CreateBingoCardRequest) returns (CreateBingoCardResponse);
+
   // BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
   rpc GetBingoCard(GetBingoCardRequest) returns (GetBingoCardResponse);
   
@@ -104,7 +107,7 @@ message BingoCard {
   int32 year = 3;
   int32 month = 4;
   google.protobuf.Timestamp update_time = 5;
-  // Added create_time
+  // Goal.create_time is the timestamp when the goal was created.
   google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
 }
 
@@ -113,6 +116,60 @@ message BingoCard {
  * Request/Response Messages
  * =========================
  */
+
+// --- Bingo Card Messages ---
+
+// CreateBingoCardRequest contains parameters for creating a new bingo card.
+message CreateBingoCardRequest {
+  // parent is the user resource name (e.g., "users/123").
+  string parent = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // bingo_card contains the initial state (year, month).
+  BingoCard bingo_card = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// CreateBingoCardResponse contains the created BingoCard.
+message CreateBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+// GetBingoCardRequest contains parameters for retrieving a bingo card.
+message GetBingoCardRequest {
+  // GetBingoCardRequest.name is the resource name of the bingo card.
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // GetBingoCardRequest.BingoCardView controls the level of detail returned.
+  enum BingoCardView {
+    BINGO_CARD_VIEW_UNSPECIFIED = 0;
+    // BINGO_CARD_VIEW_BASIC returns the grid with only goal resource names.
+    BINGO_CARD_VIEW_BASIC = 1;
+    // BINGO_CARD_VIEW_FULL returns the grid with goal_value objects fully populated.
+    BINGO_CARD_VIEW_FULL = 2;
+  }
+  // GetBingoCardRequest.view is the detail level of the returned BingoCard.
+  BingoCardView view = 2;
+}
+
+// GetBingoCardResponse wraps the retrieved BingoCard resource.
+message GetBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+// UpdateBingoCardRequest contains parameters for modifying a bingo card layout.
+message UpdateBingoCardRequest {
+  // UpdateBingoCardRequest.bingo_card is the bingo card state to update.
+  BingoCard bingo_card = 1 [(google.api.field_behavior) = REQUIRED];
+  
+  // UpdateBingoCardRequest.update_mask is the list of fields to be updated.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// UpdateBingoCardResponse returns the updated BingoCard.
+message UpdateBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+// --- Goal Messages ---
 
 // CreateGoalRequest contains parameters for creating a new goal.
 message CreateGoalRequest {
@@ -178,42 +235,6 @@ message UpdateGoalRequest {
 // UpdateGoalResponse returns the updated Goal.
 message UpdateGoalResponse {
   Goal goal = 1;
-}
-
-// GetBingoCardRequest contains parameters for retrieving a bingo card.
-message GetBingoCardRequest {
-  // GetBingoCardRequest.name is the resource name of the bingo card.
-  string name = 1 [(google.api.field_behavior) = REQUIRED];
-
-  // GetBingoCardRequest.BingoCardView controls the level of detail returned.
-  enum BingoCardView {
-    BINGO_CARD_VIEW_UNSPECIFIED = 0;
-    // BINGO_CARD_VIEW_BASIC returns the grid with only goal resource names.
-    BINGO_CARD_VIEW_BASIC = 1;
-    // BINGO_CARD_VIEW_FULL returns the grid with goal_value objects fully populated.
-    BINGO_CARD_VIEW_FULL = 2;
-  }
-  // GetBingoCardRequest.view is the detail level of the returned BingoCard.
-  BingoCardView view = 2;
-}
-
-// GetBingoCardResponse wraps the retrieved BingoCard resource.
-message GetBingoCardResponse {
-  BingoCard bingo_card = 1;
-}
-
-// UpdateBingoCardRequest contains parameters for modifying a bingo card layout.
-message UpdateBingoCardRequest {
-  // UpdateBingoCardRequest.bingo_card is the bingo card state to update.
-  BingoCard bingo_card = 1 [(google.api.field_behavior) = REQUIRED];
-  
-  // UpdateBingoCardRequest.update_mask is the list of fields to be updated.
-  google.protobuf.FieldMask update_mask = 2;
-}
-
-// UpdateBingoCardResponse returns the updated BingoCard.
-message UpdateBingoCardResponse {
-  BingoCard bingo_card = 1;
 }
 
 // DeleteGoalRequest contains parameters for deleting a goal.

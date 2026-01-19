@@ -287,6 +287,7 @@ var GoalService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	BingoService_CreateBingoCard_FullMethodName = "/totle_tasks.v1.BingoService/CreateBingoCard"
 	BingoService_GetBingoCard_FullMethodName    = "/totle_tasks.v1.BingoService/GetBingoCard"
 	BingoService_UpdateBingoCard_FullMethodName = "/totle_tasks.v1.BingoService/UpdateBingoCard"
 )
@@ -297,6 +298,8 @@ const (
 //
 // BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 type BingoServiceClient interface {
+	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+	CreateBingoCard(ctx context.Context, in *CreateBingoCardRequest, opts ...grpc.CallOption) (*CreateBingoCardResponse, error)
 	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error)
 	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
@@ -309,6 +312,16 @@ type bingoServiceClient struct {
 
 func NewBingoServiceClient(cc grpc.ClientConnInterface) BingoServiceClient {
 	return &bingoServiceClient{cc}
+}
+
+func (c *bingoServiceClient) CreateBingoCard(ctx context.Context, in *CreateBingoCardRequest, opts ...grpc.CallOption) (*CreateBingoCardResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateBingoCardResponse)
+	err := c.cc.Invoke(ctx, BingoService_CreateBingoCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *bingoServiceClient) GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error) {
@@ -337,6 +350,8 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBing
 //
 // BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 type BingoServiceServer interface {
+	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+	CreateBingoCard(context.Context, *CreateBingoCardRequest) (*CreateBingoCardResponse, error)
 	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error)
 	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
@@ -351,6 +366,9 @@ type BingoServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBingoServiceServer struct{}
 
+func (UnimplementedBingoServiceServer) CreateBingoCard(context.Context, *CreateBingoCardRequest) (*CreateBingoCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBingoCard not implemented")
+}
 func (UnimplementedBingoServiceServer) GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBingoCard not implemented")
 }
@@ -376,6 +394,24 @@ func RegisterBingoServiceServer(s grpc.ServiceRegistrar, srv BingoServiceServer)
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&BingoService_ServiceDesc, srv)
+}
+
+func _BingoService_CreateBingoCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBingoCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BingoServiceServer).CreateBingoCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BingoService_CreateBingoCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BingoServiceServer).CreateBingoCard(ctx, req.(*CreateBingoCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _BingoService_GetBingoCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -421,6 +457,10 @@ var BingoService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "totle_tasks.v1.BingoService",
 	HandlerType: (*BingoServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateBingoCard",
+			Handler:    _BingoService_CreateBingoCard_Handler,
+		},
 		{
 			MethodName: "GetBingoCard",
 			Handler:    _BingoService_GetBingoCard_Handler,

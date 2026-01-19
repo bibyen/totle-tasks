@@ -126,7 +126,7 @@ func (x GetBingoCardRequest_BingoCardView) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GetBingoCardRequest_BingoCardView.Descriptor instead.
 func (GetBingoCardRequest_BingoCardView) EnumDescriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{10, 0}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{4, 0}
 }
 
 // Goal represents a single task or objective a user wants to track.
@@ -247,7 +247,7 @@ type BingoCard struct {
 	Year       int32                  `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
 	Month      int32                  `protobuf:"varint,4,opt,name=month,proto3" json:"month,omitempty"`
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
-	// Added create_time
+	// Goal.create_time is the timestamp when the goal was created.
 	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -325,6 +325,306 @@ func (x *BingoCard) GetCreateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+// CreateBingoCardRequest contains parameters for creating a new bingo card.
+type CreateBingoCardRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// parent is the user resource name (e.g., "users/123").
+	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	// bingo_card contains the initial state (year, month).
+	BingoCard     *BingoCard `protobuf:"bytes,2,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateBingoCardRequest) Reset() {
+	*x = CreateBingoCardRequest{}
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateBingoCardRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateBingoCardRequest) ProtoMessage() {}
+
+func (x *CreateBingoCardRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateBingoCardRequest.ProtoReflect.Descriptor instead.
+func (*CreateBingoCardRequest) Descriptor() ([]byte, []int) {
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateBingoCardRequest) GetParent() string {
+	if x != nil {
+		return x.Parent
+	}
+	return ""
+}
+
+func (x *CreateBingoCardRequest) GetBingoCard() *BingoCard {
+	if x != nil {
+		return x.BingoCard
+	}
+	return nil
+}
+
+// CreateBingoCardResponse contains the created BingoCard.
+type CreateBingoCardResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateBingoCardResponse) Reset() {
+	*x = CreateBingoCardResponse{}
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateBingoCardResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateBingoCardResponse) ProtoMessage() {}
+
+func (x *CreateBingoCardResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateBingoCardResponse.ProtoReflect.Descriptor instead.
+func (*CreateBingoCardResponse) Descriptor() ([]byte, []int) {
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CreateBingoCardResponse) GetBingoCard() *BingoCard {
+	if x != nil {
+		return x.BingoCard
+	}
+	return nil
+}
+
+// GetBingoCardRequest contains parameters for retrieving a bingo card.
+type GetBingoCardRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// GetBingoCardRequest.name is the resource name of the bingo card.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// GetBingoCardRequest.view is the detail level of the returned BingoCard.
+	View          GetBingoCardRequest_BingoCardView `protobuf:"varint,2,opt,name=view,proto3,enum=totle_tasks.v1.GetBingoCardRequest_BingoCardView" json:"view,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBingoCardRequest) Reset() {
+	*x = GetBingoCardRequest{}
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBingoCardRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBingoCardRequest) ProtoMessage() {}
+
+func (x *GetBingoCardRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBingoCardRequest.ProtoReflect.Descriptor instead.
+func (*GetBingoCardRequest) Descriptor() ([]byte, []int) {
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetBingoCardRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *GetBingoCardRequest) GetView() GetBingoCardRequest_BingoCardView {
+	if x != nil {
+		return x.View
+	}
+	return GetBingoCardRequest_BINGO_CARD_VIEW_UNSPECIFIED
+}
+
+// GetBingoCardResponse wraps the retrieved BingoCard resource.
+type GetBingoCardResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBingoCardResponse) Reset() {
+	*x = GetBingoCardResponse{}
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBingoCardResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBingoCardResponse) ProtoMessage() {}
+
+func (x *GetBingoCardResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBingoCardResponse.ProtoReflect.Descriptor instead.
+func (*GetBingoCardResponse) Descriptor() ([]byte, []int) {
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetBingoCardResponse) GetBingoCard() *BingoCard {
+	if x != nil {
+		return x.BingoCard
+	}
+	return nil
+}
+
+// UpdateBingoCardRequest contains parameters for modifying a bingo card layout.
+type UpdateBingoCardRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UpdateBingoCardRequest.bingo_card is the bingo card state to update.
+	BingoCard *BingoCard `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	// UpdateBingoCardRequest.update_mask is the list of fields to be updated.
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateBingoCardRequest) Reset() {
+	*x = UpdateBingoCardRequest{}
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateBingoCardRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateBingoCardRequest) ProtoMessage() {}
+
+func (x *UpdateBingoCardRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateBingoCardRequest.ProtoReflect.Descriptor instead.
+func (*UpdateBingoCardRequest) Descriptor() ([]byte, []int) {
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *UpdateBingoCardRequest) GetBingoCard() *BingoCard {
+	if x != nil {
+		return x.BingoCard
+	}
+	return nil
+}
+
+func (x *UpdateBingoCardRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.UpdateMask
+	}
+	return nil
+}
+
+// UpdateBingoCardResponse returns the updated BingoCard.
+type UpdateBingoCardResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateBingoCardResponse) Reset() {
+	*x = UpdateBingoCardResponse{}
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateBingoCardResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateBingoCardResponse) ProtoMessage() {}
+
+func (x *UpdateBingoCardResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateBingoCardResponse.ProtoReflect.Descriptor instead.
+func (*UpdateBingoCardResponse) Descriptor() ([]byte, []int) {
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *UpdateBingoCardResponse) GetBingoCard() *BingoCard {
+	if x != nil {
+		return x.BingoCard
+	}
+	return nil
+}
+
 // CreateGoalRequest contains parameters for creating a new goal.
 type CreateGoalRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -340,7 +640,7 @@ type CreateGoalRequest struct {
 
 func (x *CreateGoalRequest) Reset() {
 	*x = CreateGoalRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[2]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -352,7 +652,7 @@ func (x *CreateGoalRequest) String() string {
 func (*CreateGoalRequest) ProtoMessage() {}
 
 func (x *CreateGoalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[2]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -365,7 +665,7 @@ func (x *CreateGoalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateGoalRequest.ProtoReflect.Descriptor instead.
 func (*CreateGoalRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{2}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateGoalRequest) GetParent() string {
@@ -399,7 +699,7 @@ type CreateGoalResponse struct {
 
 func (x *CreateGoalResponse) Reset() {
 	*x = CreateGoalResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[3]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -411,7 +711,7 @@ func (x *CreateGoalResponse) String() string {
 func (*CreateGoalResponse) ProtoMessage() {}
 
 func (x *CreateGoalResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[3]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -424,7 +724,7 @@ func (x *CreateGoalResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateGoalResponse.ProtoReflect.Descriptor instead.
 func (*CreateGoalResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{3}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateGoalResponse) GetGoal() *Goal {
@@ -445,7 +745,7 @@ type GetGoalRequest struct {
 
 func (x *GetGoalRequest) Reset() {
 	*x = GetGoalRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[4]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -457,7 +757,7 @@ func (x *GetGoalRequest) String() string {
 func (*GetGoalRequest) ProtoMessage() {}
 
 func (x *GetGoalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[4]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -470,7 +770,7 @@ func (x *GetGoalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGoalRequest.ProtoReflect.Descriptor instead.
 func (*GetGoalRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{4}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetGoalRequest) GetName() string {
@@ -490,7 +790,7 @@ type GetGoalResponse struct {
 
 func (x *GetGoalResponse) Reset() {
 	*x = GetGoalResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[5]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -502,7 +802,7 @@ func (x *GetGoalResponse) String() string {
 func (*GetGoalResponse) ProtoMessage() {}
 
 func (x *GetGoalResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[5]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -515,7 +815,7 @@ func (x *GetGoalResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGoalResponse.ProtoReflect.Descriptor instead.
 func (*GetGoalResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{5}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetGoalResponse) GetGoal() *Goal {
@@ -542,7 +842,7 @@ type ListGoalsRequest struct {
 
 func (x *ListGoalsRequest) Reset() {
 	*x = ListGoalsRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[6]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -554,7 +854,7 @@ func (x *ListGoalsRequest) String() string {
 func (*ListGoalsRequest) ProtoMessage() {}
 
 func (x *ListGoalsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[6]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,7 +867,7 @@ func (x *ListGoalsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGoalsRequest.ProtoReflect.Descriptor instead.
 func (*ListGoalsRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{6}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListGoalsRequest) GetParent() string {
@@ -609,7 +909,7 @@ type ListGoalsResponse struct {
 
 func (x *ListGoalsResponse) Reset() {
 	*x = ListGoalsResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[7]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -621,7 +921,7 @@ func (x *ListGoalsResponse) String() string {
 func (*ListGoalsResponse) ProtoMessage() {}
 
 func (x *ListGoalsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[7]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -634,7 +934,7 @@ func (x *ListGoalsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGoalsResponse.ProtoReflect.Descriptor instead.
 func (*ListGoalsResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{7}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListGoalsResponse) GetGoals() []*Goal {
@@ -664,7 +964,7 @@ type UpdateGoalRequest struct {
 
 func (x *UpdateGoalRequest) Reset() {
 	*x = UpdateGoalRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[8]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -676,7 +976,7 @@ func (x *UpdateGoalRequest) String() string {
 func (*UpdateGoalRequest) ProtoMessage() {}
 
 func (x *UpdateGoalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[8]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -689,7 +989,7 @@ func (x *UpdateGoalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateGoalRequest.ProtoReflect.Descriptor instead.
 func (*UpdateGoalRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{8}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UpdateGoalRequest) GetGoal() *Goal {
@@ -716,7 +1016,7 @@ type UpdateGoalResponse struct {
 
 func (x *UpdateGoalResponse) Reset() {
 	*x = UpdateGoalResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[9]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -728,7 +1028,7 @@ func (x *UpdateGoalResponse) String() string {
 func (*UpdateGoalResponse) ProtoMessage() {}
 
 func (x *UpdateGoalResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[9]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -741,212 +1041,12 @@ func (x *UpdateGoalResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateGoalResponse.ProtoReflect.Descriptor instead.
 func (*UpdateGoalResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{9}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UpdateGoalResponse) GetGoal() *Goal {
 	if x != nil {
 		return x.Goal
-	}
-	return nil
-}
-
-// GetBingoCardRequest contains parameters for retrieving a bingo card.
-type GetBingoCardRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// GetBingoCardRequest.name is the resource name of the bingo card.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// GetBingoCardRequest.view is the detail level of the returned BingoCard.
-	View          GetBingoCardRequest_BingoCardView `protobuf:"varint,2,opt,name=view,proto3,enum=totle_tasks.v1.GetBingoCardRequest_BingoCardView" json:"view,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetBingoCardRequest) Reset() {
-	*x = GetBingoCardRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetBingoCardRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetBingoCardRequest) ProtoMessage() {}
-
-func (x *GetBingoCardRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetBingoCardRequest.ProtoReflect.Descriptor instead.
-func (*GetBingoCardRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *GetBingoCardRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *GetBingoCardRequest) GetView() GetBingoCardRequest_BingoCardView {
-	if x != nil {
-		return x.View
-	}
-	return GetBingoCardRequest_BINGO_CARD_VIEW_UNSPECIFIED
-}
-
-// GetBingoCardResponse wraps the retrieved BingoCard resource.
-type GetBingoCardResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetBingoCardResponse) Reset() {
-	*x = GetBingoCardResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetBingoCardResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetBingoCardResponse) ProtoMessage() {}
-
-func (x *GetBingoCardResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetBingoCardResponse.ProtoReflect.Descriptor instead.
-func (*GetBingoCardResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *GetBingoCardResponse) GetBingoCard() *BingoCard {
-	if x != nil {
-		return x.BingoCard
-	}
-	return nil
-}
-
-// UpdateBingoCardRequest contains parameters for modifying a bingo card layout.
-type UpdateBingoCardRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// UpdateBingoCardRequest.bingo_card is the bingo card state to update.
-	BingoCard *BingoCard `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
-	// UpdateBingoCardRequest.update_mask is the list of fields to be updated.
-	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateBingoCardRequest) Reset() {
-	*x = UpdateBingoCardRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateBingoCardRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateBingoCardRequest) ProtoMessage() {}
-
-func (x *UpdateBingoCardRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateBingoCardRequest.ProtoReflect.Descriptor instead.
-func (*UpdateBingoCardRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *UpdateBingoCardRequest) GetBingoCard() *BingoCard {
-	if x != nil {
-		return x.BingoCard
-	}
-	return nil
-}
-
-func (x *UpdateBingoCardRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
-	if x != nil {
-		return x.UpdateMask
-	}
-	return nil
-}
-
-// UpdateBingoCardResponse returns the updated BingoCard.
-type UpdateBingoCardResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	BingoCard     *BingoCard             `protobuf:"bytes,1,opt,name=bingo_card,json=bingoCard,proto3" json:"bingo_card,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateBingoCardResponse) Reset() {
-	*x = UpdateBingoCardResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateBingoCardResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateBingoCardResponse) ProtoMessage() {}
-
-func (x *UpdateBingoCardResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateBingoCardResponse.ProtoReflect.Descriptor instead.
-func (*UpdateBingoCardResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *UpdateBingoCardResponse) GetBingoCard() *BingoCard {
-	if x != nil {
-		return x.BingoCard
 	}
 	return nil
 }
@@ -962,7 +1062,7 @@ type DeleteGoalRequest struct {
 
 func (x *DeleteGoalRequest) Reset() {
 	*x = DeleteGoalRequest{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[14]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -974,7 +1074,7 @@ func (x *DeleteGoalRequest) String() string {
 func (*DeleteGoalRequest) ProtoMessage() {}
 
 func (x *DeleteGoalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[14]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -987,7 +1087,7 @@ func (x *DeleteGoalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteGoalRequest.ProtoReflect.Descriptor instead.
 func (*DeleteGoalRequest) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{14}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeleteGoalRequest) GetName() string {
@@ -1006,7 +1106,7 @@ type DeleteGoalResponse struct {
 
 func (x *DeleteGoalResponse) Reset() {
 	*x = DeleteGoalResponse{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[15]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1018,7 +1118,7 @@ func (x *DeleteGoalResponse) String() string {
 func (*DeleteGoalResponse) ProtoMessage() {}
 
 func (x *DeleteGoalResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[15]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1031,7 +1131,7 @@ func (x *DeleteGoalResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteGoalResponse.ProtoReflect.Descriptor instead.
 func (*DeleteGoalResponse) Descriptor() ([]byte, []int) {
-	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{15}
+	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{17}
 }
 
 type BingoCard_Slot struct {
@@ -1044,7 +1144,7 @@ type BingoCard_Slot struct {
 
 func (x *BingoCard_Slot) Reset() {
 	*x = BingoCard_Slot{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[16]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1056,7 +1156,7 @@ func (x *BingoCard_Slot) String() string {
 func (*BingoCard_Slot) ProtoMessage() {}
 
 func (x *BingoCard_Slot) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[16]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1095,7 +1195,7 @@ type BingoCard_GridRow struct {
 
 func (x *BingoCard_GridRow) Reset() {
 	*x = BingoCard_GridRow{}
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[17]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1107,7 +1207,7 @@ func (x *BingoCard_GridRow) String() string {
 func (*BingoCard_GridRow) ProtoMessage() {}
 
 func (x *BingoCard_GridRow) ProtoReflect() protoreflect.Message {
-	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[17]
+	mi := &file_totle_tasks_v1_totle_tasks_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1172,7 +1272,32 @@ const file_totle_tasks_v1_totle_tasks_proto_rawDesc = "" +
 	"goal_value\x18\x02 \x01(\v2\x14.totle_tasks.v1.GoalR\tgoalValue\x1a?\n" +
 	"\aGridRow\x124\n" +
 	"\x05slots\x18\x01 \x03(\v2\x1e.totle_tasks.v1.BingoCard.SlotR\x05slots:A\xeaA>\n" +
-	"#totletasks.googleapis.com/BingoCard\x12\x17bingoCards/{bingo_card}\"x\n" +
+	"#totletasks.googleapis.com/BingoCard\x12\x17bingoCards/{bingo_card}\"t\n" +
+	"\x16CreateBingoCardRequest\x12\x1b\n" +
+	"\x06parent\x18\x01 \x01(\tB\x03\xe0A\x02R\x06parent\x12=\n" +
+	"\n" +
+	"bingo_card\x18\x02 \x01(\v2\x19.totle_tasks.v1.BingoCardB\x03\xe0A\x02R\tbingoCard\"S\n" +
+	"\x17CreateBingoCardResponse\x128\n" +
+	"\n" +
+	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardR\tbingoCard\"\xdc\x01\n" +
+	"\x13GetBingoCardRequest\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tB\x03\xe0A\x02R\x04name\x12E\n" +
+	"\x04view\x18\x02 \x01(\x0e21.totle_tasks.v1.GetBingoCardRequest.BingoCardViewR\x04view\"e\n" +
+	"\rBingoCardView\x12\x1f\n" +
+	"\x1bBINGO_CARD_VIEW_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15BINGO_CARD_VIEW_BASIC\x10\x01\x12\x18\n" +
+	"\x14BINGO_CARD_VIEW_FULL\x10\x02\"P\n" +
+	"\x14GetBingoCardResponse\x128\n" +
+	"\n" +
+	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardR\tbingoCard\"\x94\x01\n" +
+	"\x16UpdateBingoCardRequest\x12=\n" +
+	"\n" +
+	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardB\x03\xe0A\x02R\tbingoCard\x12;\n" +
+	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
+	"updateMask\"S\n" +
+	"\x17UpdateBingoCardResponse\x128\n" +
+	"\n" +
+	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardR\tbingoCard\"x\n" +
 	"\x11CreateGoalRequest\x12\x1b\n" +
 	"\x06parent\x18\x01 \x01(\tB\x03\xe0A\x02R\x06parent\x12-\n" +
 	"\x04goal\x18\x02 \x01(\v2\x14.totle_tasks.v1.GoalB\x03\xe0A\x02R\x04goal\x12\x17\n" +
@@ -1198,25 +1323,7 @@ const file_totle_tasks_v1_totle_tasks_proto_rawDesc = "" +
 	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
 	"updateMask\">\n" +
 	"\x12UpdateGoalResponse\x12(\n" +
-	"\x04goal\x18\x01 \x01(\v2\x14.totle_tasks.v1.GoalR\x04goal\"\xdc\x01\n" +
-	"\x13GetBingoCardRequest\x12\x17\n" +
-	"\x04name\x18\x01 \x01(\tB\x03\xe0A\x02R\x04name\x12E\n" +
-	"\x04view\x18\x02 \x01(\x0e21.totle_tasks.v1.GetBingoCardRequest.BingoCardViewR\x04view\"e\n" +
-	"\rBingoCardView\x12\x1f\n" +
-	"\x1bBINGO_CARD_VIEW_UNSPECIFIED\x10\x00\x12\x19\n" +
-	"\x15BINGO_CARD_VIEW_BASIC\x10\x01\x12\x18\n" +
-	"\x14BINGO_CARD_VIEW_FULL\x10\x02\"P\n" +
-	"\x14GetBingoCardResponse\x128\n" +
-	"\n" +
-	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardR\tbingoCard\"\x94\x01\n" +
-	"\x16UpdateBingoCardRequest\x12=\n" +
-	"\n" +
-	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardB\x03\xe0A\x02R\tbingoCard\x12;\n" +
-	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\"S\n" +
-	"\x17UpdateBingoCardResponse\x128\n" +
-	"\n" +
-	"bingo_card\x18\x01 \x01(\v2\x19.totle_tasks.v1.BingoCardR\tbingoCard\",\n" +
+	"\x04goal\x18\x01 \x01(\v2\x14.totle_tasks.v1.GoalR\x04goal\",\n" +
 	"\x11DeleteGoalRequest\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tB\x03\xe0A\x02R\x04name\"\x14\n" +
 	"\x12DeleteGoalResponse2\xaa\x03\n" +
@@ -1228,8 +1335,9 @@ const file_totle_tasks_v1_totle_tasks_proto_rawDesc = "" +
 	"\n" +
 	"UpdateGoal\x12!.totle_tasks.v1.UpdateGoalRequest\x1a\".totle_tasks.v1.UpdateGoalResponse\x12S\n" +
 	"\n" +
-	"DeleteGoal\x12!.totle_tasks.v1.DeleteGoalRequest\x1a\".totle_tasks.v1.DeleteGoalResponse2\xcd\x01\n" +
-	"\fBingoService\x12Y\n" +
+	"DeleteGoal\x12!.totle_tasks.v1.DeleteGoalRequest\x1a\".totle_tasks.v1.DeleteGoalResponse2\xb1\x02\n" +
+	"\fBingoService\x12b\n" +
+	"\x0fCreateBingoCard\x12&.totle_tasks.v1.CreateBingoCardRequest\x1a'.totle_tasks.v1.CreateBingoCardResponse\x12Y\n" +
 	"\fGetBingoCard\x12#.totle_tasks.v1.GetBingoCardRequest\x1a$.totle_tasks.v1.GetBingoCardResponse\x12b\n" +
 	"\x0fUpdateBingoCard\x12&.totle_tasks.v1.UpdateBingoCardRequest\x1a'.totle_tasks.v1.UpdateBingoCardResponseBGZEgithub.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1;totletasksv1b\x06proto3"
 
@@ -1246,71 +1354,77 @@ func file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP() []byte {
 }
 
 var file_totle_tasks_v1_totle_tasks_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_totle_tasks_v1_totle_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_totle_tasks_v1_totle_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_totle_tasks_v1_totle_tasks_proto_goTypes = []any{
 	(Goal_Visibility)(0),                   // 0: totle_tasks.v1.Goal.Visibility
 	(GetBingoCardRequest_BingoCardView)(0), // 1: totle_tasks.v1.GetBingoCardRequest.BingoCardView
 	(*Goal)(nil),                           // 2: totle_tasks.v1.Goal
 	(*BingoCard)(nil),                      // 3: totle_tasks.v1.BingoCard
-	(*CreateGoalRequest)(nil),              // 4: totle_tasks.v1.CreateGoalRequest
-	(*CreateGoalResponse)(nil),             // 5: totle_tasks.v1.CreateGoalResponse
-	(*GetGoalRequest)(nil),                 // 6: totle_tasks.v1.GetGoalRequest
-	(*GetGoalResponse)(nil),                // 7: totle_tasks.v1.GetGoalResponse
-	(*ListGoalsRequest)(nil),               // 8: totle_tasks.v1.ListGoalsRequest
-	(*ListGoalsResponse)(nil),              // 9: totle_tasks.v1.ListGoalsResponse
-	(*UpdateGoalRequest)(nil),              // 10: totle_tasks.v1.UpdateGoalRequest
-	(*UpdateGoalResponse)(nil),             // 11: totle_tasks.v1.UpdateGoalResponse
-	(*GetBingoCardRequest)(nil),            // 12: totle_tasks.v1.GetBingoCardRequest
-	(*GetBingoCardResponse)(nil),           // 13: totle_tasks.v1.GetBingoCardResponse
-	(*UpdateBingoCardRequest)(nil),         // 14: totle_tasks.v1.UpdateBingoCardRequest
-	(*UpdateBingoCardResponse)(nil),        // 15: totle_tasks.v1.UpdateBingoCardResponse
-	(*DeleteGoalRequest)(nil),              // 16: totle_tasks.v1.DeleteGoalRequest
-	(*DeleteGoalResponse)(nil),             // 17: totle_tasks.v1.DeleteGoalResponse
-	(*BingoCard_Slot)(nil),                 // 18: totle_tasks.v1.BingoCard.Slot
-	(*BingoCard_GridRow)(nil),              // 19: totle_tasks.v1.BingoCard.GridRow
-	(*timestamppb.Timestamp)(nil),          // 20: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),          // 21: google.protobuf.FieldMask
+	(*CreateBingoCardRequest)(nil),         // 4: totle_tasks.v1.CreateBingoCardRequest
+	(*CreateBingoCardResponse)(nil),        // 5: totle_tasks.v1.CreateBingoCardResponse
+	(*GetBingoCardRequest)(nil),            // 6: totle_tasks.v1.GetBingoCardRequest
+	(*GetBingoCardResponse)(nil),           // 7: totle_tasks.v1.GetBingoCardResponse
+	(*UpdateBingoCardRequest)(nil),         // 8: totle_tasks.v1.UpdateBingoCardRequest
+	(*UpdateBingoCardResponse)(nil),        // 9: totle_tasks.v1.UpdateBingoCardResponse
+	(*CreateGoalRequest)(nil),              // 10: totle_tasks.v1.CreateGoalRequest
+	(*CreateGoalResponse)(nil),             // 11: totle_tasks.v1.CreateGoalResponse
+	(*GetGoalRequest)(nil),                 // 12: totle_tasks.v1.GetGoalRequest
+	(*GetGoalResponse)(nil),                // 13: totle_tasks.v1.GetGoalResponse
+	(*ListGoalsRequest)(nil),               // 14: totle_tasks.v1.ListGoalsRequest
+	(*ListGoalsResponse)(nil),              // 15: totle_tasks.v1.ListGoalsResponse
+	(*UpdateGoalRequest)(nil),              // 16: totle_tasks.v1.UpdateGoalRequest
+	(*UpdateGoalResponse)(nil),             // 17: totle_tasks.v1.UpdateGoalResponse
+	(*DeleteGoalRequest)(nil),              // 18: totle_tasks.v1.DeleteGoalRequest
+	(*DeleteGoalResponse)(nil),             // 19: totle_tasks.v1.DeleteGoalResponse
+	(*BingoCard_Slot)(nil),                 // 20: totle_tasks.v1.BingoCard.Slot
+	(*BingoCard_GridRow)(nil),              // 21: totle_tasks.v1.BingoCard.GridRow
+	(*timestamppb.Timestamp)(nil),          // 22: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),          // 23: google.protobuf.FieldMask
 }
 var file_totle_tasks_v1_totle_tasks_proto_depIdxs = []int32{
 	0,  // 0: totle_tasks.v1.Goal.visibility:type_name -> totle_tasks.v1.Goal.Visibility
-	20, // 1: totle_tasks.v1.Goal.create_time:type_name -> google.protobuf.Timestamp
-	20, // 2: totle_tasks.v1.Goal.update_time:type_name -> google.protobuf.Timestamp
-	19, // 3: totle_tasks.v1.BingoCard.grid:type_name -> totle_tasks.v1.BingoCard.GridRow
-	20, // 4: totle_tasks.v1.BingoCard.update_time:type_name -> google.protobuf.Timestamp
-	20, // 5: totle_tasks.v1.BingoCard.create_time:type_name -> google.protobuf.Timestamp
-	2,  // 6: totle_tasks.v1.CreateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
-	2,  // 7: totle_tasks.v1.CreateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
-	2,  // 8: totle_tasks.v1.GetGoalResponse.goal:type_name -> totle_tasks.v1.Goal
-	2,  // 9: totle_tasks.v1.ListGoalsResponse.goals:type_name -> totle_tasks.v1.Goal
-	2,  // 10: totle_tasks.v1.UpdateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
-	21, // 11: totle_tasks.v1.UpdateGoalRequest.update_mask:type_name -> google.protobuf.FieldMask
-	2,  // 12: totle_tasks.v1.UpdateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
-	1,  // 13: totle_tasks.v1.GetBingoCardRequest.view:type_name -> totle_tasks.v1.GetBingoCardRequest.BingoCardView
-	3,  // 14: totle_tasks.v1.GetBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
-	3,  // 15: totle_tasks.v1.UpdateBingoCardRequest.bingo_card:type_name -> totle_tasks.v1.BingoCard
-	21, // 16: totle_tasks.v1.UpdateBingoCardRequest.update_mask:type_name -> google.protobuf.FieldMask
-	3,  // 17: totle_tasks.v1.UpdateBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
-	2,  // 18: totle_tasks.v1.BingoCard.Slot.goal_value:type_name -> totle_tasks.v1.Goal
-	18, // 19: totle_tasks.v1.BingoCard.GridRow.slots:type_name -> totle_tasks.v1.BingoCard.Slot
-	4,  // 20: totle_tasks.v1.GoalService.CreateGoal:input_type -> totle_tasks.v1.CreateGoalRequest
-	6,  // 21: totle_tasks.v1.GoalService.GetGoal:input_type -> totle_tasks.v1.GetGoalRequest
-	8,  // 22: totle_tasks.v1.GoalService.ListGoals:input_type -> totle_tasks.v1.ListGoalsRequest
-	10, // 23: totle_tasks.v1.GoalService.UpdateGoal:input_type -> totle_tasks.v1.UpdateGoalRequest
-	16, // 24: totle_tasks.v1.GoalService.DeleteGoal:input_type -> totle_tasks.v1.DeleteGoalRequest
-	12, // 25: totle_tasks.v1.BingoService.GetBingoCard:input_type -> totle_tasks.v1.GetBingoCardRequest
-	14, // 26: totle_tasks.v1.BingoService.UpdateBingoCard:input_type -> totle_tasks.v1.UpdateBingoCardRequest
-	5,  // 27: totle_tasks.v1.GoalService.CreateGoal:output_type -> totle_tasks.v1.CreateGoalResponse
-	7,  // 28: totle_tasks.v1.GoalService.GetGoal:output_type -> totle_tasks.v1.GetGoalResponse
-	9,  // 29: totle_tasks.v1.GoalService.ListGoals:output_type -> totle_tasks.v1.ListGoalsResponse
-	11, // 30: totle_tasks.v1.GoalService.UpdateGoal:output_type -> totle_tasks.v1.UpdateGoalResponse
-	17, // 31: totle_tasks.v1.GoalService.DeleteGoal:output_type -> totle_tasks.v1.DeleteGoalResponse
-	13, // 32: totle_tasks.v1.BingoService.GetBingoCard:output_type -> totle_tasks.v1.GetBingoCardResponse
-	15, // 33: totle_tasks.v1.BingoService.UpdateBingoCard:output_type -> totle_tasks.v1.UpdateBingoCardResponse
-	27, // [27:34] is the sub-list for method output_type
-	20, // [20:27] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	22, // 1: totle_tasks.v1.Goal.create_time:type_name -> google.protobuf.Timestamp
+	22, // 2: totle_tasks.v1.Goal.update_time:type_name -> google.protobuf.Timestamp
+	21, // 3: totle_tasks.v1.BingoCard.grid:type_name -> totle_tasks.v1.BingoCard.GridRow
+	22, // 4: totle_tasks.v1.BingoCard.update_time:type_name -> google.protobuf.Timestamp
+	22, // 5: totle_tasks.v1.BingoCard.create_time:type_name -> google.protobuf.Timestamp
+	3,  // 6: totle_tasks.v1.CreateBingoCardRequest.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	3,  // 7: totle_tasks.v1.CreateBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	1,  // 8: totle_tasks.v1.GetBingoCardRequest.view:type_name -> totle_tasks.v1.GetBingoCardRequest.BingoCardView
+	3,  // 9: totle_tasks.v1.GetBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	3,  // 10: totle_tasks.v1.UpdateBingoCardRequest.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	23, // 11: totle_tasks.v1.UpdateBingoCardRequest.update_mask:type_name -> google.protobuf.FieldMask
+	3,  // 12: totle_tasks.v1.UpdateBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	2,  // 13: totle_tasks.v1.CreateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 14: totle_tasks.v1.CreateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 15: totle_tasks.v1.GetGoalResponse.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 16: totle_tasks.v1.ListGoalsResponse.goals:type_name -> totle_tasks.v1.Goal
+	2,  // 17: totle_tasks.v1.UpdateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
+	23, // 18: totle_tasks.v1.UpdateGoalRequest.update_mask:type_name -> google.protobuf.FieldMask
+	2,  // 19: totle_tasks.v1.UpdateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 20: totle_tasks.v1.BingoCard.Slot.goal_value:type_name -> totle_tasks.v1.Goal
+	20, // 21: totle_tasks.v1.BingoCard.GridRow.slots:type_name -> totle_tasks.v1.BingoCard.Slot
+	10, // 22: totle_tasks.v1.GoalService.CreateGoal:input_type -> totle_tasks.v1.CreateGoalRequest
+	12, // 23: totle_tasks.v1.GoalService.GetGoal:input_type -> totle_tasks.v1.GetGoalRequest
+	14, // 24: totle_tasks.v1.GoalService.ListGoals:input_type -> totle_tasks.v1.ListGoalsRequest
+	16, // 25: totle_tasks.v1.GoalService.UpdateGoal:input_type -> totle_tasks.v1.UpdateGoalRequest
+	18, // 26: totle_tasks.v1.GoalService.DeleteGoal:input_type -> totle_tasks.v1.DeleteGoalRequest
+	4,  // 27: totle_tasks.v1.BingoService.CreateBingoCard:input_type -> totle_tasks.v1.CreateBingoCardRequest
+	6,  // 28: totle_tasks.v1.BingoService.GetBingoCard:input_type -> totle_tasks.v1.GetBingoCardRequest
+	8,  // 29: totle_tasks.v1.BingoService.UpdateBingoCard:input_type -> totle_tasks.v1.UpdateBingoCardRequest
+	11, // 30: totle_tasks.v1.GoalService.CreateGoal:output_type -> totle_tasks.v1.CreateGoalResponse
+	13, // 31: totle_tasks.v1.GoalService.GetGoal:output_type -> totle_tasks.v1.GetGoalResponse
+	15, // 32: totle_tasks.v1.GoalService.ListGoals:output_type -> totle_tasks.v1.ListGoalsResponse
+	17, // 33: totle_tasks.v1.GoalService.UpdateGoal:output_type -> totle_tasks.v1.UpdateGoalResponse
+	19, // 34: totle_tasks.v1.GoalService.DeleteGoal:output_type -> totle_tasks.v1.DeleteGoalResponse
+	5,  // 35: totle_tasks.v1.BingoService.CreateBingoCard:output_type -> totle_tasks.v1.CreateBingoCardResponse
+	7,  // 36: totle_tasks.v1.BingoService.GetBingoCard:output_type -> totle_tasks.v1.GetBingoCardResponse
+	9,  // 37: totle_tasks.v1.BingoService.UpdateBingoCard:output_type -> totle_tasks.v1.UpdateBingoCardResponse
+	30, // [30:38] is the sub-list for method output_type
+	22, // [22:30] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_totle_tasks_v1_totle_tasks_proto_init() }
@@ -1324,7 +1438,7 @@ func file_totle_tasks_v1_totle_tasks_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_totle_tasks_v1_totle_tasks_proto_rawDesc), len(file_totle_tasks_v1_totle_tasks_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

@@ -30,14 +30,15 @@ CREATE TABLE friendships (
 );
 
 CREATE TABLE goals (
-    goal_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(user_id),
+    goal_id UUID PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
     title TEXT NOT NULL,
     completed BOOLEAN DEFAULT FALSE,
-    visibility SMALLINT DEFAULT 1, -- 1: Private, 2: Friends, 3: Public
-    is_active BOOLEAN DEFAULT TRUE, -- is_active = false means 'archived'
-    create_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    update_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    visibility INT DEFAULT 1,
+    is_active BOOLEAN DEFAULT TRUE,
+    is_assigned BOOLEAN DEFAULT FALSE, -- <--- Add this column
+    create_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE bingo_cards (

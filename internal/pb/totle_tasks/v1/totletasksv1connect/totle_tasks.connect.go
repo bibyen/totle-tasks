@@ -45,6 +45,9 @@ const (
 	GoalServiceUpdateGoalProcedure = "/totle_tasks.v1.GoalService/UpdateGoal"
 	// GoalServiceDeleteGoalProcedure is the fully-qualified name of the GoalService's DeleteGoal RPC.
 	GoalServiceDeleteGoalProcedure = "/totle_tasks.v1.GoalService/DeleteGoal"
+	// BingoServiceCreateBingoCardProcedure is the fully-qualified name of the BingoService's
+	// CreateBingoCard RPC.
+	BingoServiceCreateBingoCardProcedure = "/totle_tasks.v1.BingoService/CreateBingoCard"
 	// BingoServiceGetBingoCardProcedure is the fully-qualified name of the BingoService's GetBingoCard
 	// RPC.
 	BingoServiceGetBingoCardProcedure = "/totle_tasks.v1.BingoService/GetBingoCard"
@@ -239,6 +242,8 @@ func (UnimplementedGoalServiceHandler) DeleteGoal(context.Context, *connect.Requ
 
 // BingoServiceClient is a client for the totle_tasks.v1.BingoService service.
 type BingoServiceClient interface {
+	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+	CreateBingoCard(context.Context, *connect.Request[v1.CreateBingoCardRequest]) (*connect.Response[v1.CreateBingoCardResponse], error)
 	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *connect.Request[v1.GetBingoCardRequest]) (*connect.Response[v1.GetBingoCardResponse], error)
 	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
@@ -256,6 +261,12 @@ func NewBingoServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 	baseURL = strings.TrimRight(baseURL, "/")
 	bingoServiceMethods := v1.File_totle_tasks_v1_totle_tasks_proto.Services().ByName("BingoService").Methods()
 	return &bingoServiceClient{
+		createBingoCard: connect.NewClient[v1.CreateBingoCardRequest, v1.CreateBingoCardResponse](
+			httpClient,
+			baseURL+BingoServiceCreateBingoCardProcedure,
+			connect.WithSchema(bingoServiceMethods.ByName("CreateBingoCard")),
+			connect.WithClientOptions(opts...),
+		),
 		getBingoCard: connect.NewClient[v1.GetBingoCardRequest, v1.GetBingoCardResponse](
 			httpClient,
 			baseURL+BingoServiceGetBingoCardProcedure,
@@ -273,8 +284,14 @@ func NewBingoServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 
 // bingoServiceClient implements BingoServiceClient.
 type bingoServiceClient struct {
+	createBingoCard *connect.Client[v1.CreateBingoCardRequest, v1.CreateBingoCardResponse]
 	getBingoCard    *connect.Client[v1.GetBingoCardRequest, v1.GetBingoCardResponse]
 	updateBingoCard *connect.Client[v1.UpdateBingoCardRequest, v1.UpdateBingoCardResponse]
+}
+
+// CreateBingoCard calls totle_tasks.v1.BingoService.CreateBingoCard.
+func (c *bingoServiceClient) CreateBingoCard(ctx context.Context, req *connect.Request[v1.CreateBingoCardRequest]) (*connect.Response[v1.CreateBingoCardResponse], error) {
+	return c.createBingoCard.CallUnary(ctx, req)
 }
 
 // GetBingoCard calls totle_tasks.v1.BingoService.GetBingoCard.
@@ -289,6 +306,8 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, req *connect.R
 
 // BingoServiceHandler is an implementation of the totle_tasks.v1.BingoService service.
 type BingoServiceHandler interface {
+	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+	CreateBingoCard(context.Context, *connect.Request[v1.CreateBingoCardRequest]) (*connect.Response[v1.CreateBingoCardResponse], error)
 	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *connect.Request[v1.GetBingoCardRequest]) (*connect.Response[v1.GetBingoCardResponse], error)
 	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
@@ -302,6 +321,12 @@ type BingoServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewBingoServiceHandler(svc BingoServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
 	bingoServiceMethods := v1.File_totle_tasks_v1_totle_tasks_proto.Services().ByName("BingoService").Methods()
+	bingoServiceCreateBingoCardHandler := connect.NewUnaryHandler(
+		BingoServiceCreateBingoCardProcedure,
+		svc.CreateBingoCard,
+		connect.WithSchema(bingoServiceMethods.ByName("CreateBingoCard")),
+		connect.WithHandlerOptions(opts...),
+	)
 	bingoServiceGetBingoCardHandler := connect.NewUnaryHandler(
 		BingoServiceGetBingoCardProcedure,
 		svc.GetBingoCard,
@@ -316,6 +341,8 @@ func NewBingoServiceHandler(svc BingoServiceHandler, opts ...connect.HandlerOpti
 	)
 	return "/totle_tasks.v1.BingoService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case BingoServiceCreateBingoCardProcedure:
+			bingoServiceCreateBingoCardHandler.ServeHTTP(w, r)
 		case BingoServiceGetBingoCardProcedure:
 			bingoServiceGetBingoCardHandler.ServeHTTP(w, r)
 		case BingoServiceUpdateBingoCardProcedure:
@@ -328,6 +355,10 @@ func NewBingoServiceHandler(svc BingoServiceHandler, opts ...connect.HandlerOpti
 
 // UnimplementedBingoServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedBingoServiceHandler struct{}
+
+func (UnimplementedBingoServiceHandler) CreateBingoCard(context.Context, *connect.Request[v1.CreateBingoCardRequest]) (*connect.Response[v1.CreateBingoCardResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("totle_tasks.v1.BingoService.CreateBingoCard is not implemented"))
+}
 
 func (UnimplementedBingoServiceHandler) GetBingoCard(context.Context, *connect.Request[v1.GetBingoCardRequest]) (*connect.Response[v1.GetBingoCardResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("totle_tasks.v1.BingoService.GetBingoCard is not implemented"))
