@@ -32,15 +32,10 @@ const (
 //
 // GoalService manages individual user objectives and CRUD operations for goal tracking.
 type GoalServiceClient interface {
-	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error)
-	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*GetGoalResponse, error)
-	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(ctx context.Context, in *ListGoalsRequest, opts ...grpc.CallOption) (*ListGoalsResponse, error)
-	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*UpdateGoalResponse, error)
-	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*DeleteGoalResponse, error)
 }
 
@@ -108,15 +103,10 @@ func (c *goalServiceClient) DeleteGoal(ctx context.Context, in *DeleteGoalReques
 //
 // GoalService manages individual user objectives and CRUD operations for goal tracking.
 type GoalServiceServer interface {
-	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error)
-	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(context.Context, *GetGoalRequest) (*GetGoalResponse, error)
-	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(context.Context, *ListGoalsRequest) (*ListGoalsResponse, error)
-	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(context.Context, *UpdateGoalRequest) (*UpdateGoalResponse, error)
-	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(context.Context, *DeleteGoalRequest) (*DeleteGoalResponse, error)
 	mustEmbedUnimplementedGoalServiceServer()
 }
@@ -287,6 +277,7 @@ var GoalService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	BingoService_CreateBingoCard_FullMethodName = "/totle_tasks.v1.BingoService/CreateBingoCard"
 	BingoService_GetBingoCard_FullMethodName    = "/totle_tasks.v1.BingoService/GetBingoCard"
 	BingoService_UpdateBingoCard_FullMethodName = "/totle_tasks.v1.BingoService/UpdateBingoCard"
 )
@@ -297,9 +288,9 @@ const (
 //
 // BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 type BingoServiceClient interface {
-	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
+	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+	CreateBingoCard(ctx context.Context, in *CreateBingoCardRequest, opts ...grpc.CallOption) (*CreateBingoCardResponse, error)
 	GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error)
-	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*UpdateBingoCardResponse, error)
 }
 
@@ -309,6 +300,16 @@ type bingoServiceClient struct {
 
 func NewBingoServiceClient(cc grpc.ClientConnInterface) BingoServiceClient {
 	return &bingoServiceClient{cc}
+}
+
+func (c *bingoServiceClient) CreateBingoCard(ctx context.Context, in *CreateBingoCardRequest, opts ...grpc.CallOption) (*CreateBingoCardResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateBingoCardResponse)
+	err := c.cc.Invoke(ctx, BingoService_CreateBingoCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *bingoServiceClient) GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error) {
@@ -337,9 +338,9 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBing
 //
 // BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 type BingoServiceServer interface {
-	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
+	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+	CreateBingoCard(context.Context, *CreateBingoCardRequest) (*CreateBingoCardResponse, error)
 	GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error)
-	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*UpdateBingoCardResponse, error)
 	mustEmbedUnimplementedBingoServiceServer()
 }
@@ -351,6 +352,9 @@ type BingoServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBingoServiceServer struct{}
 
+func (UnimplementedBingoServiceServer) CreateBingoCard(context.Context, *CreateBingoCardRequest) (*CreateBingoCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBingoCard not implemented")
+}
 func (UnimplementedBingoServiceServer) GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBingoCard not implemented")
 }
@@ -376,6 +380,24 @@ func RegisterBingoServiceServer(s grpc.ServiceRegistrar, srv BingoServiceServer)
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&BingoService_ServiceDesc, srv)
+}
+
+func _BingoService_CreateBingoCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBingoCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BingoServiceServer).CreateBingoCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BingoService_CreateBingoCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BingoServiceServer).CreateBingoCard(ctx, req.(*CreateBingoCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _BingoService_GetBingoCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -421,6 +443,10 @@ var BingoService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "totle_tasks.v1.BingoService",
 	HandlerType: (*BingoServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateBingoCard",
+			Handler:    _BingoService_CreateBingoCard_Handler,
+		},
 		{
 			MethodName: "GetBingoCard",
 			Handler:    _BingoService_GetBingoCard_Handler,

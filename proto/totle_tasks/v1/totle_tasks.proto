@@ -11,28 +11,18 @@ option go_package = "github.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1;to
 
 // GoalService manages individual user objectives and CRUD operations for goal tracking.
 service GoalService {
-  // GoalService.CreateGoal creates a new Goal for the authenticated user.
   rpc CreateGoal(CreateGoalRequest) returns (CreateGoalResponse);
-  
-  // GoalService.GetGoal retrieves a specific Goal by its unique resource name.
   rpc GetGoal(GetGoalRequest) returns (GetGoalResponse);
-  
-  // GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
   rpc ListGoals(ListGoalsRequest) returns (ListGoalsResponse);
-  
-  // GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
   rpc UpdateGoal(UpdateGoalRequest) returns (UpdateGoalResponse);
-  
-  // GoalService.DeleteGoal permanently removes a Goal from the system.
   rpc DeleteGoal(DeleteGoalRequest) returns (DeleteGoalResponse);
 }
 
 // BingoService manages the gamified Bingo Card view of goals, organized by time periods.
 service BingoService {
-  // BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
+  // BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
+  rpc CreateBingoCard(CreateBingoCardRequest) returns (CreateBingoCardResponse);
   rpc GetBingoCard(GetBingoCardRequest) returns (GetBingoCardResponse);
-  
-  // BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
   rpc UpdateBingoCard(UpdateBingoCardRequest) returns (UpdateBingoCardResponse);
 }
 
@@ -42,47 +32,29 @@ service BingoService {
  * =========================
  */
 
-// Goal represents a single task or objective a user wants to track.
 message Goal {
   option (google.api.resource) = {
     type: "totletasks.googleapis.com/Goal"
     pattern: "goals/{goal}"
   };
 
-  // Goal.name is the unique resource name of the goal. Format: goals/{goal}
   string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
-  
-  // Goal.title is the user-visible title or description of the goal.
   string title = 2 [(google.api.field_behavior) = REQUIRED];
-  
-  // Goal.completed is the status indicating if the goal has been achieved.
   bool completed = 3;
-  
-  // Goal.is_assigned indicates if this goal is currently placed on a BingoCard.
   bool is_assigned = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
 
-  // Goal.Visibility defines the privacy levels allowed for this resource.
   enum Visibility {
     VISIBILITY_UNSPECIFIED = 0;
-    VISIBILITY_PRIVATE = 1; // Only the owner.
-    VISIBILITY_FRIENDS = 2; // Visible to accepted friends.
-    VISIBILITY_PUBLIC = 3;  // Visible to the community.
+    VISIBILITY_PRIVATE = 1;
+    VISIBILITY_FRIENDS = 2;
+    VISIBILITY_PUBLIC = 3;
   }
-  // Goal.visibility determines who can see this goal in social contexts.
   Visibility visibility = 5;
-
-  // Goal.is_archived indicates if the goal has been soft-deleted (is_active = false).
-  // Archived goals remain in the system to preserve Bingo history.
   bool is_archived = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
-
-  // Goal.create_time is the timestamp when the goal was created.
   google.protobuf.Timestamp create_time = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
-  
-  // Goal.update_time is the timestamp when the goal was last updated.
   google.protobuf.Timestamp update_time = 8 [(google.api.field_behavior) = OUTPUT_ONLY];
 }
 
-// BingoCard is a 2D grid representation of multiple Goals for a specific calendar month.
 message BingoCard {
   option (google.api.resource) = {
     type: "totletasks.googleapis.com/BingoCard"
@@ -104,7 +76,6 @@ message BingoCard {
   int32 year = 3;
   int32 month = 4;
   google.protobuf.Timestamp update_time = 5;
-  // Added create_time
   google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
 }
 
@@ -114,116 +85,90 @@ message BingoCard {
  * =========================
  */
 
-// CreateGoalRequest contains parameters for creating a new goal.
-message CreateGoalRequest {
-  // CreateGoalRequest.parent is the parent resource (e.g., "users/123").
+// --- Bingo Card Messages ---
+
+message CreateBingoCardRequest {
+  // parent is the user resource name (e.g., "users/123").
   string parent = 1 [(google.api.field_behavior) = REQUIRED];
-  
-  // CreateGoalRequest.goal is the Goal content to create.
+
+  // bingo_card contains the initial state (year, month).
+  BingoCard bingo_card = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+message GetBingoCardRequest {
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+
+  enum BingoCardView {
+    BINGO_CARD_VIEW_UNSPECIFIED = 0;
+    BINGO_CARD_VIEW_BASIC = 1;
+    BINGO_CARD_VIEW_FULL = 2;
+  }
+  BingoCardView view = 2;
+}
+
+message GetBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+message UpdateBingoCardRequest {
+  BingoCard bingo_card = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message UpdateBingoCardResponse {
+  BingoCard bingo_card = 1;
+}
+
+// --- Goal Messages ---
+
+message CreateGoalRequest {
+  string parent = 1 [(google.api.field_behavior) = REQUIRED];
   Goal goal = 2 [(google.api.field_behavior) = REQUIRED];
-  
-  // CreateGoalRequest.goal_id is an optional client-generated ID for the goal.
   string goal_id = 3;
 }
 
-// CreateGoalResponse contains the created Goal.
 message CreateGoalResponse {
   Goal goal = 1;
 }
 
-// GetGoalRequest contains parameters for fetching a single goal by name.
 message GetGoalRequest {
-  // GetGoalRequest.name is the resource name of the goal to retrieve.
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference).type = "totletasks.googleapis.com/Goal"
   ];
 }
 
-// GetGoalResponse wraps the retrieved Goal resource.
 message GetGoalResponse {
   Goal goal = 1;
 }
 
-// ListGoalsRequest contains parameters for listing and filtering goals.
 message ListGoalsRequest {
-  // ListGoalsRequest.parent is the parent resource to list goals from.
   string parent = 1 [(google.api.field_behavior) = REQUIRED];
-  
-  // ListGoalsRequest.page_size is the max number of goals to return.
   int32 page_size = 2;
-  
-  // ListGoalsRequest.page_token is the token for the next set of results.
   string page_token = 3;
-  
-  // ListGoalsRequest.filter is the filter string to narrow down results.
   string filter = 4;
 }
 
-// ListGoalsResponse returns a list of goals and pagination metadata.
 message ListGoalsResponse {
   repeated Goal goals = 1;
   string next_page_token = 2;
 }
 
-// UpdateGoalRequest contains parameters for modifying an existing goal.
 message UpdateGoalRequest {
-  // UpdateGoalRequest.goal is the goal resource state to update.
   Goal goal = 1 [(google.api.field_behavior) = REQUIRED];
-  
-  // UpdateGoalRequest.update_mask is the list of fields to be updated.
   google.protobuf.FieldMask update_mask = 2;
 }
 
-// UpdateGoalResponse returns the updated Goal.
 message UpdateGoalResponse {
   Goal goal = 1;
 }
 
-// GetBingoCardRequest contains parameters for retrieving a bingo card.
-message GetBingoCardRequest {
-  // GetBingoCardRequest.name is the resource name of the bingo card.
-  string name = 1 [(google.api.field_behavior) = REQUIRED];
-
-  // GetBingoCardRequest.BingoCardView controls the level of detail returned.
-  enum BingoCardView {
-    BINGO_CARD_VIEW_UNSPECIFIED = 0;
-    // BINGO_CARD_VIEW_BASIC returns the grid with only goal resource names.
-    BINGO_CARD_VIEW_BASIC = 1;
-    // BINGO_CARD_VIEW_FULL returns the grid with goal_value objects fully populated.
-    BINGO_CARD_VIEW_FULL = 2;
-  }
-  // GetBingoCardRequest.view is the detail level of the returned BingoCard.
-  BingoCardView view = 2;
-}
-
-// GetBingoCardResponse wraps the retrieved BingoCard resource.
-message GetBingoCardResponse {
-  BingoCard bingo_card = 1;
-}
-
-// UpdateBingoCardRequest contains parameters for modifying a bingo card layout.
-message UpdateBingoCardRequest {
-  // UpdateBingoCardRequest.bingo_card is the bingo card state to update.
-  BingoCard bingo_card = 1 [(google.api.field_behavior) = REQUIRED];
-  
-  // UpdateBingoCardRequest.update_mask is the list of fields to be updated.
-  google.protobuf.FieldMask update_mask = 2;
-}
-
-// UpdateBingoCardResponse returns the updated BingoCard.
-message UpdateBingoCardResponse {
-  BingoCard bingo_card = 1;
-}
-
-// DeleteGoalRequest contains parameters for deleting a goal.
 message DeleteGoalRequest {
-  // DeleteGoalRequest.name is the resource name of the goal to delete.
   string name = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
-// DeleteGoalResponse is an empty response for successful deletion.
 message DeleteGoalResponse {}
-
-// TODO: Implement SocialService to manage Friendships and Peer discovery.
-// This will enable the VISIBILITY_FRIENDS logic for Goals.
