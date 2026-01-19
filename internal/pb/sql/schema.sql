@@ -34,10 +34,8 @@ CREATE TABLE goals (
     user_id UUID NOT NULL REFERENCES users(user_id),
     title TEXT NOT NULL,
     completed BOOLEAN DEFAULT FALSE,
-    -- Visibility rules: 1: Private, 2: Friends
-    visibility SMALLINT DEFAULT 1, 
-    -- Goals are never deleted; is_active = false means 'archived'
-    is_active BOOLEAN DEFAULT TRUE, 
+    visibility SMALLINT DEFAULT 1, -- 1: Private, 2: Friends, 3: Public
+    is_active BOOLEAN DEFAULT TRUE, -- is_active = false means 'archived'
     create_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -46,13 +44,10 @@ CREATE TABLE bingo_cards (
     bingo_card_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(user_id),
     title TEXT NOT NULL,
-    columns INT NOT NULL DEFAULT 5,
-    rows INT NOT NULL DEFAULT 5,
-    
+    columns INT NOT NULL DEFAULT 5 CHECK (columns = 5),
+    rows INT NOT NULL DEFAULT 5 CHECK (rows = 5),
     year INT,
     month INT,
-    card_type VARCHAR(50) DEFAULT 'STANDARD',
-    
     is_active BOOLEAN DEFAULT TRUE,
     create_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -60,10 +55,9 @@ CREATE TABLE bingo_cards (
 
 CREATE TABLE bingo_slots (
     bingo_card_id UUID REFERENCES bingo_cards(bingo_card_id) ON DELETE CASCADE,
-    -- NO ACTION ensures goal records cannot be deleted if referenced here
     goal_id UUID REFERENCES goals(goal_id) ON DELETE NO ACTION, 
-    row_index INT NOT NULL,
-    column_index INT NOT NULL,
+    row_index INT NOT NULL CHECK (row_index BETWEEN 0 AND 4),
+    column_index INT NOT NULL CHECK (column_index BETWEEN 0 AND 4),
     PRIMARY KEY (bingo_card_id, row_index, column_index),
     UNIQUE(bingo_card_id, goal_id)
 );

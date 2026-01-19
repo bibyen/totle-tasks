@@ -24,13 +24,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Goal.Visibility defines who can see this goal in social or private contexts.
+// Goal.Visibility defines the privacy levels allowed for this resource.
 type Goal_Visibility int32
 
 const (
 	Goal_VISIBILITY_UNSPECIFIED Goal_Visibility = 0
 	Goal_VISIBILITY_PRIVATE     Goal_Visibility = 1 // Only the owner.
-	Goal_VISIBILITY_PUBLIC      Goal_Visibility = 2 // Visible to the community.
+	Goal_VISIBILITY_FRIENDS     Goal_Visibility = 2 // Visible to accepted friends.
+	Goal_VISIBILITY_PUBLIC      Goal_Visibility = 3 // Visible to the community.
 )
 
 // Enum value maps for Goal_Visibility.
@@ -38,12 +39,14 @@ var (
 	Goal_Visibility_name = map[int32]string{
 		0: "VISIBILITY_UNSPECIFIED",
 		1: "VISIBILITY_PRIVATE",
-		2: "VISIBILITY_PUBLIC",
+		2: "VISIBILITY_FRIENDS",
+		3: "VISIBILITY_PUBLIC",
 	}
 	Goal_Visibility_value = map[string]int32{
 		"VISIBILITY_UNSPECIFIED": 0,
 		"VISIBILITY_PRIVATE":     1,
-		"VISIBILITY_PUBLIC":      2,
+		"VISIBILITY_FRIENDS":     2,
+		"VISIBILITY_PUBLIC":      3,
 	}
 )
 
@@ -137,12 +140,15 @@ type Goal struct {
 	Completed bool `protobuf:"varint,3,opt,name=completed,proto3" json:"completed,omitempty"`
 	// Goal.is_assigned indicates if this goal is currently placed on a BingoCard.
 	IsAssigned bool `protobuf:"varint,4,opt,name=is_assigned,json=isAssigned,proto3" json:"is_assigned,omitempty"`
-	// Goal.visibility is the current visibility state of the goal.
+	// Goal.visibility determines who can see this goal in social contexts.
 	Visibility Goal_Visibility `protobuf:"varint,5,opt,name=visibility,proto3,enum=totle_tasks.v1.Goal_Visibility" json:"visibility,omitempty"`
+	// Goal.is_archived indicates if the goal has been soft-deleted (is_active = false).
+	// Archived goals remain in the system to preserve Bingo history.
+	IsArchived bool `protobuf:"varint,6,opt,name=is_archived,json=isArchived,proto3" json:"is_archived,omitempty"`
 	// Goal.create_time is the timestamp when the goal was created.
-	CreateTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// Goal.update_time is the timestamp when the goal was last updated.
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -212,6 +218,13 @@ func (x *Goal) GetVisibility() Goal_Visibility {
 	return Goal_VISIBILITY_UNSPECIFIED
 }
 
+func (x *Goal) GetIsArchived() bool {
+	if x != nil {
+		return x.IsArchived
+	}
+	return false
+}
+
 func (x *Goal) GetCreateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreateTime
@@ -228,17 +241,14 @@ func (x *Goal) GetUpdateTime() *timestamppb.Timestamp {
 
 // BingoCard is a 2D grid representation of multiple Goals for a specific calendar month.
 type BingoCard struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// BingoCard.name is the resource name. Format: bingoCards/{bingo_card}
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// BingoCard.grid is the 2D array representing the bingo board.
-	Grid []*BingoCard_GridRow `protobuf:"bytes,2,rep,name=grid,proto3" json:"grid,omitempty"`
-	// BingoCard.year is the calendar year this card belongs to (e.g., 2026).
-	Year int32 `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
-	// BingoCard.month is the calendar month (1-12) this card belongs to.
-	Month int32 `protobuf:"varint,4,opt,name=month,proto3" json:"month,omitempty"`
-	// BingoCard.update_time is the last time the grid layout or assignments were modified.
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Name       string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Grid       []*BingoCard_GridRow   `protobuf:"bytes,2,rep,name=grid,proto3" json:"grid,omitempty"`
+	Year       int32                  `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
+	Month      int32                  `protobuf:"varint,4,opt,name=month,proto3" json:"month,omitempty"`
+	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// Added create_time
+	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -304,6 +314,13 @@ func (x *BingoCard) GetMonth() int32 {
 func (x *BingoCard) GetUpdateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdateTime
+	}
+	return nil
+}
+
+func (x *BingoCard) GetCreateTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreateTime
 	}
 	return nil
 }
@@ -1017,13 +1034,10 @@ func (*DeleteGoalResponse) Descriptor() ([]byte, []int) {
 	return file_totle_tasks_v1_totle_tasks_proto_rawDescGZIP(), []int{15}
 }
 
-// BingoCard.Slot is a single cell in the bingo grid.
 type BingoCard_Slot struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// BingoCard.Slot.goal is the resource name of the Goal linked to this slot.
-	Goal string `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
-	// BingoCard.Slot.goal_value is the expanded Goal details, populated in FULL view.
-	GoalValue     *Goal `protobuf:"bytes,2,opt,name=goal_value,json=goalValue,proto3" json:"goal_value,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Goal          string                 `protobuf:"bytes,1,opt,name=goal,proto3" json:"goal,omitempty"`
+	GoalValue     *Goal                  `protobuf:"bytes,2,opt,name=goal_value,json=goalValue,proto3" json:"goal_value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1072,7 +1086,6 @@ func (x *BingoCard_Slot) GetGoalValue() *Goal {
 	return nil
 }
 
-// BingoCard.GridRow is a horizontal row of slots within the Bingo grid.
 type BingoCard_GridRow struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Slots         []*BingoCard_Slot      `protobuf:"bytes,1,rep,name=slots,proto3" json:"slots,omitempty"`
@@ -1121,7 +1134,7 @@ var File_totle_tasks_v1_totle_tasks_proto protoreflect.FileDescriptor
 
 const file_totle_tasks_v1_totle_tasks_proto_rawDesc = "" +
 	"\n" +
-	" totle_tasks/v1/totle_tasks.proto\x12\x0etotle_tasks.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcf\x03\n" +
+	" totle_tasks/v1/totle_tasks.proto\x12\x0etotle_tasks.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8d\x04\n" +
 	"\x04Goal\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tB\x03\xe0A\x03R\x04name\x12\x19\n" +
 	"\x05title\x18\x02 \x01(\tB\x03\xe0A\x02R\x05title\x12\x1c\n" +
@@ -1130,29 +1143,33 @@ const file_totle_tasks_v1_totle_tasks_proto_rawDesc = "" +
 	"isAssigned\x12?\n" +
 	"\n" +
 	"visibility\x18\x05 \x01(\x0e2\x1f.totle_tasks.v1.Goal.VisibilityR\n" +
-	"visibility\x12@\n" +
-	"\vcreate_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
+	"visibility\x12$\n" +
+	"\vis_archived\x18\x06 \x01(\bB\x03\xe0A\x03R\n" +
+	"isArchived\x12@\n" +
+	"\vcreate_time\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
 	"createTime\x12@\n" +
-	"\vupdate_time\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
-	"updateTime\"W\n" +
+	"\vupdate_time\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
+	"updateTime\"o\n" +
 	"\n" +
 	"Visibility\x12\x1a\n" +
 	"\x16VISIBILITY_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12VISIBILITY_PRIVATE\x10\x01\x12\x15\n" +
-	"\x11VISIBILITY_PUBLIC\x10\x02:1\xeaA.\n" +
-	"\x1etotletasks.googleapis.com/Goal\x12\fgoals/{goal}\"\xd0\x03\n" +
-	"\tBingoCard\x12\x17\n" +
-	"\x04name\x18\x01 \x01(\tB\x03\xe0A\x03R\x04name\x125\n" +
-	"\x04grid\x18\x02 \x03(\v2!.totle_tasks.v1.BingoCard.GridRowR\x04grid\x12\x17\n" +
-	"\x04year\x18\x03 \x01(\x05B\x03\xe0A\x05R\x04year\x12\x19\n" +
-	"\x05month\x18\x04 \x01(\x05B\x03\xe0A\x05R\x05month\x12@\n" +
-	"\vupdate_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
-	"updateTime\x1ay\n" +
-	"\x04Slot\x127\n" +
-	"\x04goal\x18\x01 \x01(\tB#\xfaA \n" +
-	"\x1etotletasks.googleapis.com/GoalR\x04goal\x128\n" +
+	"\x12VISIBILITY_PRIVATE\x10\x01\x12\x16\n" +
+	"\x12VISIBILITY_FRIENDS\x10\x02\x12\x15\n" +
+	"\x11VISIBILITY_PUBLIC\x10\x03:1\xeaA.\n" +
+	"\x1etotletasks.googleapis.com/Goal\x12\fgoals/{goal}\"\xd4\x03\n" +
+	"\tBingoCard\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x125\n" +
+	"\x04grid\x18\x02 \x03(\v2!.totle_tasks.v1.BingoCard.GridRowR\x04grid\x12\x12\n" +
+	"\x04year\x18\x03 \x01(\x05R\x04year\x12\x14\n" +
+	"\x05month\x18\x04 \x01(\x05R\x05month\x12;\n" +
+	"\vupdate_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"updateTime\x12@\n" +
+	"\vcreate_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
+	"createTime\x1aO\n" +
+	"\x04Slot\x12\x12\n" +
+	"\x04goal\x18\x01 \x01(\tR\x04goal\x123\n" +
 	"\n" +
-	"goal_value\x18\x02 \x01(\v2\x14.totle_tasks.v1.GoalB\x03\xe0A\x03R\tgoalValue\x1a?\n" +
+	"goal_value\x18\x02 \x01(\v2\x14.totle_tasks.v1.GoalR\tgoalValue\x1a?\n" +
 	"\aGridRow\x124\n" +
 	"\x05slots\x18\x01 \x03(\v2\x1e.totle_tasks.v1.BingoCard.SlotR\x05slots:A\xeaA>\n" +
 	"#totletasks.googleapis.com/BingoCard\x12\x17bingoCards/{bingo_card}\"x\n" +
@@ -1260,39 +1277,40 @@ var file_totle_tasks_v1_totle_tasks_proto_depIdxs = []int32{
 	20, // 2: totle_tasks.v1.Goal.update_time:type_name -> google.protobuf.Timestamp
 	19, // 3: totle_tasks.v1.BingoCard.grid:type_name -> totle_tasks.v1.BingoCard.GridRow
 	20, // 4: totle_tasks.v1.BingoCard.update_time:type_name -> google.protobuf.Timestamp
-	2,  // 5: totle_tasks.v1.CreateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
-	2,  // 6: totle_tasks.v1.CreateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
-	2,  // 7: totle_tasks.v1.GetGoalResponse.goal:type_name -> totle_tasks.v1.Goal
-	2,  // 8: totle_tasks.v1.ListGoalsResponse.goals:type_name -> totle_tasks.v1.Goal
-	2,  // 9: totle_tasks.v1.UpdateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
-	21, // 10: totle_tasks.v1.UpdateGoalRequest.update_mask:type_name -> google.protobuf.FieldMask
-	2,  // 11: totle_tasks.v1.UpdateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
-	1,  // 12: totle_tasks.v1.GetBingoCardRequest.view:type_name -> totle_tasks.v1.GetBingoCardRequest.BingoCardView
-	3,  // 13: totle_tasks.v1.GetBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
-	3,  // 14: totle_tasks.v1.UpdateBingoCardRequest.bingo_card:type_name -> totle_tasks.v1.BingoCard
-	21, // 15: totle_tasks.v1.UpdateBingoCardRequest.update_mask:type_name -> google.protobuf.FieldMask
-	3,  // 16: totle_tasks.v1.UpdateBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
-	2,  // 17: totle_tasks.v1.BingoCard.Slot.goal_value:type_name -> totle_tasks.v1.Goal
-	18, // 18: totle_tasks.v1.BingoCard.GridRow.slots:type_name -> totle_tasks.v1.BingoCard.Slot
-	4,  // 19: totle_tasks.v1.GoalService.CreateGoal:input_type -> totle_tasks.v1.CreateGoalRequest
-	6,  // 20: totle_tasks.v1.GoalService.GetGoal:input_type -> totle_tasks.v1.GetGoalRequest
-	8,  // 21: totle_tasks.v1.GoalService.ListGoals:input_type -> totle_tasks.v1.ListGoalsRequest
-	10, // 22: totle_tasks.v1.GoalService.UpdateGoal:input_type -> totle_tasks.v1.UpdateGoalRequest
-	16, // 23: totle_tasks.v1.GoalService.DeleteGoal:input_type -> totle_tasks.v1.DeleteGoalRequest
-	12, // 24: totle_tasks.v1.BingoService.GetBingoCard:input_type -> totle_tasks.v1.GetBingoCardRequest
-	14, // 25: totle_tasks.v1.BingoService.UpdateBingoCard:input_type -> totle_tasks.v1.UpdateBingoCardRequest
-	5,  // 26: totle_tasks.v1.GoalService.CreateGoal:output_type -> totle_tasks.v1.CreateGoalResponse
-	7,  // 27: totle_tasks.v1.GoalService.GetGoal:output_type -> totle_tasks.v1.GetGoalResponse
-	9,  // 28: totle_tasks.v1.GoalService.ListGoals:output_type -> totle_tasks.v1.ListGoalsResponse
-	11, // 29: totle_tasks.v1.GoalService.UpdateGoal:output_type -> totle_tasks.v1.UpdateGoalResponse
-	17, // 30: totle_tasks.v1.GoalService.DeleteGoal:output_type -> totle_tasks.v1.DeleteGoalResponse
-	13, // 31: totle_tasks.v1.BingoService.GetBingoCard:output_type -> totle_tasks.v1.GetBingoCardResponse
-	15, // 32: totle_tasks.v1.BingoService.UpdateBingoCard:output_type -> totle_tasks.v1.UpdateBingoCardResponse
-	26, // [26:33] is the sub-list for method output_type
-	19, // [19:26] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	20, // 5: totle_tasks.v1.BingoCard.create_time:type_name -> google.protobuf.Timestamp
+	2,  // 6: totle_tasks.v1.CreateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 7: totle_tasks.v1.CreateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 8: totle_tasks.v1.GetGoalResponse.goal:type_name -> totle_tasks.v1.Goal
+	2,  // 9: totle_tasks.v1.ListGoalsResponse.goals:type_name -> totle_tasks.v1.Goal
+	2,  // 10: totle_tasks.v1.UpdateGoalRequest.goal:type_name -> totle_tasks.v1.Goal
+	21, // 11: totle_tasks.v1.UpdateGoalRequest.update_mask:type_name -> google.protobuf.FieldMask
+	2,  // 12: totle_tasks.v1.UpdateGoalResponse.goal:type_name -> totle_tasks.v1.Goal
+	1,  // 13: totle_tasks.v1.GetBingoCardRequest.view:type_name -> totle_tasks.v1.GetBingoCardRequest.BingoCardView
+	3,  // 14: totle_tasks.v1.GetBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	3,  // 15: totle_tasks.v1.UpdateBingoCardRequest.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	21, // 16: totle_tasks.v1.UpdateBingoCardRequest.update_mask:type_name -> google.protobuf.FieldMask
+	3,  // 17: totle_tasks.v1.UpdateBingoCardResponse.bingo_card:type_name -> totle_tasks.v1.BingoCard
+	2,  // 18: totle_tasks.v1.BingoCard.Slot.goal_value:type_name -> totle_tasks.v1.Goal
+	18, // 19: totle_tasks.v1.BingoCard.GridRow.slots:type_name -> totle_tasks.v1.BingoCard.Slot
+	4,  // 20: totle_tasks.v1.GoalService.CreateGoal:input_type -> totle_tasks.v1.CreateGoalRequest
+	6,  // 21: totle_tasks.v1.GoalService.GetGoal:input_type -> totle_tasks.v1.GetGoalRequest
+	8,  // 22: totle_tasks.v1.GoalService.ListGoals:input_type -> totle_tasks.v1.ListGoalsRequest
+	10, // 23: totle_tasks.v1.GoalService.UpdateGoal:input_type -> totle_tasks.v1.UpdateGoalRequest
+	16, // 24: totle_tasks.v1.GoalService.DeleteGoal:input_type -> totle_tasks.v1.DeleteGoalRequest
+	12, // 25: totle_tasks.v1.BingoService.GetBingoCard:input_type -> totle_tasks.v1.GetBingoCardRequest
+	14, // 26: totle_tasks.v1.BingoService.UpdateBingoCard:input_type -> totle_tasks.v1.UpdateBingoCardRequest
+	5,  // 27: totle_tasks.v1.GoalService.CreateGoal:output_type -> totle_tasks.v1.CreateGoalResponse
+	7,  // 28: totle_tasks.v1.GoalService.GetGoal:output_type -> totle_tasks.v1.GetGoalResponse
+	9,  // 29: totle_tasks.v1.GoalService.ListGoals:output_type -> totle_tasks.v1.ListGoalsResponse
+	11, // 30: totle_tasks.v1.GoalService.UpdateGoal:output_type -> totle_tasks.v1.UpdateGoalResponse
+	17, // 31: totle_tasks.v1.GoalService.DeleteGoal:output_type -> totle_tasks.v1.DeleteGoalResponse
+	13, // 32: totle_tasks.v1.BingoService.GetBingoCard:output_type -> totle_tasks.v1.GetBingoCardResponse
+	15, // 33: totle_tasks.v1.BingoService.UpdateBingoCard:output_type -> totle_tasks.v1.UpdateBingoCardResponse
+	27, // [27:34] is the sub-list for method output_type
+	20, // [20:27] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_totle_tasks_v1_totle_tasks_proto_init() }
