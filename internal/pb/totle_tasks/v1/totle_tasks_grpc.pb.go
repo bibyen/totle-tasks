@@ -32,10 +32,15 @@ const (
 //
 // GoalService manages individual user objectives and CRUD operations for goal tracking.
 type GoalServiceClient interface {
+	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error)
+	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(ctx context.Context, in *GetGoalRequest, opts ...grpc.CallOption) (*GetGoalResponse, error)
+	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(ctx context.Context, in *ListGoalsRequest, opts ...grpc.CallOption) (*ListGoalsResponse, error)
+	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*UpdateGoalResponse, error)
+	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*DeleteGoalResponse, error)
 }
 
@@ -103,10 +108,15 @@ func (c *goalServiceClient) DeleteGoal(ctx context.Context, in *DeleteGoalReques
 //
 // GoalService manages individual user objectives and CRUD operations for goal tracking.
 type GoalServiceServer interface {
+	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error)
+	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(context.Context, *GetGoalRequest) (*GetGoalResponse, error)
+	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(context.Context, *ListGoalsRequest) (*ListGoalsResponse, error)
+	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(context.Context, *UpdateGoalRequest) (*UpdateGoalResponse, error)
+	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(context.Context, *DeleteGoalRequest) (*DeleteGoalResponse, error)
 	mustEmbedUnimplementedGoalServiceServer()
 }
@@ -290,7 +300,9 @@ const (
 type BingoServiceClient interface {
 	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
 	CreateBingoCard(ctx context.Context, in *CreateBingoCardRequest, opts ...grpc.CallOption) (*CreateBingoCardResponse, error)
+	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(ctx context.Context, in *GetBingoCardRequest, opts ...grpc.CallOption) (*GetBingoCardResponse, error)
+	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(ctx context.Context, in *UpdateBingoCardRequest, opts ...grpc.CallOption) (*UpdateBingoCardResponse, error)
 }
 
@@ -340,7 +352,9 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, in *UpdateBing
 type BingoServiceServer interface {
 	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
 	CreateBingoCard(context.Context, *CreateBingoCardRequest) (*CreateBingoCardResponse, error)
+	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *GetBingoCardRequest) (*GetBingoCardResponse, error)
+	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(context.Context, *UpdateBingoCardRequest) (*UpdateBingoCardResponse, error)
 	mustEmbedUnimplementedBingoServiceServer()
 }

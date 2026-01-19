@@ -58,10 +58,15 @@ const (
 
 // GoalServiceClient is a client for the totle_tasks.v1.GoalService service.
 type GoalServiceClient interface {
+	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(context.Context, *connect.Request[v1.CreateGoalRequest]) (*connect.Response[v1.CreateGoalResponse], error)
+	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(context.Context, *connect.Request[v1.GetGoalRequest]) (*connect.Response[v1.GetGoalResponse], error)
+	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(context.Context, *connect.Request[v1.ListGoalsRequest]) (*connect.Response[v1.ListGoalsResponse], error)
+	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(context.Context, *connect.Request[v1.UpdateGoalRequest]) (*connect.Response[v1.UpdateGoalResponse], error)
+	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(context.Context, *connect.Request[v1.DeleteGoalRequest]) (*connect.Response[v1.DeleteGoalResponse], error)
 }
 
@@ -145,10 +150,15 @@ func (c *goalServiceClient) DeleteGoal(ctx context.Context, req *connect.Request
 
 // GoalServiceHandler is an implementation of the totle_tasks.v1.GoalService service.
 type GoalServiceHandler interface {
+	// GoalService.CreateGoal creates a new Goal for the authenticated user.
 	CreateGoal(context.Context, *connect.Request[v1.CreateGoalRequest]) (*connect.Response[v1.CreateGoalResponse], error)
+	// GoalService.GetGoal retrieves a specific Goal by its unique resource name.
 	GetGoal(context.Context, *connect.Request[v1.GetGoalRequest]) (*connect.Response[v1.GetGoalResponse], error)
+	// GoalService.ListGoals returns a paginated list of Goals belonging to the parent resource.
 	ListGoals(context.Context, *connect.Request[v1.ListGoalsRequest]) (*connect.Response[v1.ListGoalsResponse], error)
+	// GoalService.UpdateGoal updates specific fields of an existing Goal using a FieldMask.
 	UpdateGoal(context.Context, *connect.Request[v1.UpdateGoalRequest]) (*connect.Response[v1.UpdateGoalResponse], error)
+	// GoalService.DeleteGoal permanently removes a Goal from the system.
 	DeleteGoal(context.Context, *connect.Request[v1.DeleteGoalRequest]) (*connect.Response[v1.DeleteGoalResponse], error)
 }
 
@@ -234,7 +244,9 @@ func (UnimplementedGoalServiceHandler) DeleteGoal(context.Context, *connect.Requ
 type BingoServiceClient interface {
 	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
 	CreateBingoCard(context.Context, *connect.Request[v1.CreateBingoCardRequest]) (*connect.Response[v1.CreateBingoCardResponse], error)
+	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *connect.Request[v1.GetBingoCardRequest]) (*connect.Response[v1.GetBingoCardResponse], error)
+	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(context.Context, *connect.Request[v1.UpdateBingoCardRequest]) (*connect.Response[v1.UpdateBingoCardResponse], error)
 }
 
@@ -296,7 +308,9 @@ func (c *bingoServiceClient) UpdateBingoCard(ctx context.Context, req *connect.R
 type BingoServiceHandler interface {
 	// BingoService.CreateBingoCard explicitly creates a new bingo card for a specific period.
 	CreateBingoCard(context.Context, *connect.Request[v1.CreateBingoCardRequest]) (*connect.Response[v1.CreateBingoCardResponse], error)
+	// BingoService.GetBingoCard retrieves the bingo card for a specific year and month.
 	GetBingoCard(context.Context, *connect.Request[v1.GetBingoCardRequest]) (*connect.Response[v1.GetBingoCardResponse], error)
+	// BingoService.UpdateBingoCard updates the layout or goal assignments within a bingo card.
 	UpdateBingoCard(context.Context, *connect.Request[v1.UpdateBingoCardRequest]) (*connect.Response[v1.UpdateBingoCardResponse], error)
 }
 
