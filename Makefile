@@ -1,4 +1,4 @@
-# === Variables ===
+# Variables
 BUF_BIN := $(shell which buf)
 PROTO_SRC := proto
 
