@@ -29,6 +29,11 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 
 	// 3. Teardown
-	testDB.Close()
+	err = testDB.Close()
+	if err != nil {
+		log.Printf("Could not close test database: %v", err)
+	}
+
+	// 4. Exit with the proper code
 	os.Exit(code)
 }

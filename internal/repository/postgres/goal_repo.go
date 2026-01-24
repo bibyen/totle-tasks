@@ -21,7 +21,8 @@ func (r *GoalRepo) Create(ctx context.Context, g *domain.Goal) error {
 	query := `
 		INSERT INTO goals (goal_id, user_id, title, completed, visibility, is_active, is_assigned)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
-		RETURNING create_time, update_time`
+		RETURNING create_time, update_time
+	`
 
 	return r.db.QueryRowContext(ctx, query,
 		g.ID, g.UserID, g.Title, g.Completed, g.Visibility, g.IsActive, g.IsAssigned,
@@ -30,8 +31,23 @@ func (r *GoalRepo) Create(ctx context.Context, g *domain.Goal) error {
 
 func (r *GoalRepo) List(ctx context.Context, userID string) ([]*domain.Goal, error) {
 	// Standard List: All active goals for the user
-	query := `SELECT goal_id, user_id, title, completed, visibility, is_active, is_assigned, create_time, update_time 
-	          FROM goals WHERE user_id = $1 AND is_active = true ORDER BY create_time DESC`
+	query := `
+	SELECT 
+		goal_id, 
+		user_id, 
+		title, 
+		completed, 
+		visibility, 
+		is_active, 
+		is_assigned, 
+		create_time, u
+		pdate_time 
+	FROM goals 
+	WHERE 
+		user_id = $1 
+		AND is_active = true
+	ORDER BY create_time DESC
+	`
 	return r.queryList(ctx, query, userID)
 }
 
@@ -41,7 +57,12 @@ func (r *GoalRepo) queryList(ctx context.Context, query string, args ...interfac
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			fmt.Println("Failed to close rows:", err)
+		}
+	}()
 
 	var goals []*domain.Goal
 	for rows.Next() {
@@ -59,7 +80,8 @@ func (r *GoalRepo) GetByID(ctx context.Context, id string) (*domain.Goal, error)
 	query := `
 		SELECT goal_id, user_id, title, completed, visibility, is_active, create_time, update_time
 		FROM goals
-		WHERE goal_id = $1`
+		WHERE goal_id = $1
+	`
 
 	var g domain.Goal
 	err := r.db.QueryRowContext(ctx, query, id).Scan(
@@ -83,7 +105,8 @@ func (r *GoalRepo) Update(ctx context.Context, g *domain.Goal) error {
 		    completed = $2,
 		    visibility = $3,
 		    update_time = CURRENT_TIMESTAMP
-		WHERE goal_id = $4 AND is_active = true
+		WHERE goal_id = $4 
+		AND is_active = true
 		RETURNING update_time`
 
 	err := r.db.QueryRowContext(ctx, query,
@@ -104,7 +127,8 @@ func (r *GoalRepo) Archive(ctx context.Context, id string) error {
 	query := `
 		UPDATE goals 
 		SET is_active = false, update_time = CURRENT_TIMESTAMP 
-		WHERE goal_id = $1 AND is_active = true`
+		WHERE goal_id = $1 
+		AND is_active = true`
 
 	res, err := r.db.ExecContext(ctx, query, id)
 	if err != nil {

@@ -23,22 +23,18 @@ all: proto test
 
 # --- Proto Management ---
 
-## lint: Lint proto files and Go files
-lint:
+## lint: Lint proto files
+proto-lint:
 	@echo "Running buf lint..."
 	@$(BUF_BIN) lint
-	@echo "Linting go files..."
-	@golint ./...
 
-## format: Format proto files and Go files
-format:
-	@echo "Formatting go files..."
-	@gofmt -s -w .
+## format: Format proto files
+proto-format:
 	@echo "Formatting proto files..."
 	@$(BUF_BIN) format -w
 
 ## proto: Generate Go code from proto files
-proto: lint
+proto: proto-lint
 	@echo "🔨 Generating code..."
 	@$(BUF_BIN) generate
 
@@ -70,6 +66,16 @@ db/shell:
 	@docker exec -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME)
 
 # --- CI ---
+
+## fmt: Format Go files
+fmt:
+	@echo "Formatting go files..."
+	@gofmt -s -w .
+
+## lint: Lint Go files
+lint:
+	@echo "Linting go files..."
+	@golangci-lint run ./...
 
 ## build: Build the application
 build:

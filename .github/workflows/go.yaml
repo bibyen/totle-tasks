@@ -12,6 +12,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: true
+
+      - name: Download Go modules
+        run: go mod download
+
+      - name: Run linter
+        run: |
+          make lint
+
   test:
     runs-on: ubuntu-latest
     steps:
