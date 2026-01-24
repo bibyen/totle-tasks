@@ -1,11 +1,32 @@
 package server
 
 import (
-	totletasksv1 "github.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1"
+	"fmt"
+
+	"github.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1/totletasksv1connect"
+	"github.com/bibyen/totle-tasks/internal/service"
 )
 
-// Server implements the gRPC server for GoalService and BingoService.
+// Server is the main server struct that holds all service handlers.
 type Server struct {
-	totletasksv1.UnimplementedGoalServiceServer
-	totletasksv1.UnimplementedBingoServiceServer
+	totletasksv1connect.UnimplementedGoalServiceHandler
+	totletasksv1connect.UnimplementedBingoServiceHandler
+
+	GoalService  *service.GoalService
+	BingoService *service.BingoService
+}
+
+// NewServer returns a new Server instance.
+func NewServer(goalService *service.GoalService, bingoService *service.BingoService) (*Server, error) {
+	if goalService == nil {
+		return nil, fmt.Errorf("goalService cannot be nil")
+	}
+	if bingoService == nil {
+		return nil, fmt.Errorf("bingoService cannot be nil")
+	}
+
+	return &Server{
+		GoalService:  goalService,
+		BingoService: bingoService,
+	}, nil
 }
