@@ -13,8 +13,8 @@ type GoalProvider interface {
 	CreateGoal(ctx context.Context, goal *domain.Goal) (*domain.Goal, error)
 	// GetGoal retrieves a domain goal by its internal ID.
 	GetGoal(ctx context.Context, id string) (*domain.Goal, error)
-	// ListGoals returns a slice of domain goals and pagination info.
-	ListGoals(ctx context.Context, parentID string, limit int, offset int) ([]*domain.Goal, error)
+	// It returns the list of goals and the token for the next page.
+    ListGoals(ctx context.Context, parentID string, pageSize int32, pageToken string) ([]*domain.Goal, string, error)
 	// UpdateGoal applies updates to a domain model.
 	UpdateGoal(ctx context.Context, id string, updates map[string]any) (*domain.Goal, error)
 	// DeleteGoal archives a goal.

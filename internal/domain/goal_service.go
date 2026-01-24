@@ -19,12 +19,12 @@ func (s *GoalService) GetGoal(ctx context.Context, goalID string) (*Goal, error)
 }
 
 // ListGoals returns a paginated list of Goals belonging to the parent resource.
-func (s *GoalService) ListGoals(ctx context.Context, parentID string) ([]*Goal, error) {
-	return []*Goal{}, nil
+func (s *GoalService) ListGoals(ctx context.Context, parent string, pageSize int32, pageToken string) ([]*Goal, string, error) {
+	return []*Goal{}, "", nil
 }
 
 // UpdateGoal updates specific fields of an existing Goal using a FieldMask.
-func (s *GoalService) UpdateGoal(ctx context.Context, goalID string, goal *Goal, update map[string]any) (*Goal, error) {
+func (s *GoalService) UpdateGoal(ctx context.Context, goalID string, update map[string]any) (*Goal, error) {
 	return &Goal{}, nil
 }
 
