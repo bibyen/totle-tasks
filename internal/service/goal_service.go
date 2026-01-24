@@ -6,7 +6,7 @@ import (
 	domain "github.com/bibyen/totle-tasks/internal/domain"
 )
 
-// Called by the GoalServiceHandler in internal/server/server.go
+// Contained in the server in internal/server/server.go
 type GoalService struct{}
 
 // CreateGoal creates a new Goal for the authenticated user.
