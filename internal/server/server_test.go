@@ -4,15 +4,15 @@ package server
 import (
 	"testing"
 
-	"github.com/bibyen/totle-tasks/internal/service"
+	"github.com/bibyen/totle-tasks/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNewServer_Success(t *testing.T) {
 	t.Run("server created successfully", func(t *testing.T) {
-		goalService := &service.GoalService{}
-		bingoService := &service.BingoService{}
+		goalService := &domain.GoalService{}
+		bingoService := &domain.BingoService{}
 
 		_, gotErr := NewServer(goalService, bingoService)
 		require.NoError(t, gotErr)
@@ -22,19 +22,19 @@ func TestNewServer_Success(t *testing.T) {
 func TestNewServer_Failure(t *testing.T) {
 	tests := []struct {
 		name         string
-		goalService  *service.GoalService
-		bingoService *service.BingoService
+		goalService  *domain.GoalService
+		bingoService *domain.BingoService
 		errMsg       string
 	}{
 		{
 			name:         "Nil GoalService",
 			goalService:  nil,
-			bingoService: &service.BingoService{},
+			bingoService: &domain.BingoService{},
 			errMsg:       "goalService cannot be nil",
 		},
 		{
 			name:         "Nil BingoService",
-			goalService:  &service.GoalService{},
+			goalService:  &domain.GoalService{},
 			bingoService: nil,
 			errMsg:       "bingoService cannot be nil",
 		},

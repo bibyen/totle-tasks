@@ -13,11 +13,11 @@ func (s *BingoService) CreateBingoCard(ctx context.Context, newCard *BingoCard) 
 }
 
 // GetBingoCard retrieves the bingo card for a specific year and month.
-func (s *BingoService) GetBingoCard(ctx context.Context, year int32, month int32) (*BingoCard, error) {
+func (s *BingoService) GetBingoCard(ctx context.Context, cardID string) (*BingoCard, error) {
 	return &BingoCard{}, nil
 }
 
 // UpdateBingoCard updates the layout or goal assignments within a bingo card.
-func (s *BingoService) UpdateBingoCard(ctx context.Context, cardID string, card *BingoCard, update map[string]any) (*BingoCard, error) {
+func (s *BingoService) UpdateBingoCard(ctx context.Context, cardID string, update map[string]any) (*BingoCard, error) {
 	return &BingoCard{}, nil
 }

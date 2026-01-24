@@ -23,13 +23,17 @@ all: proto test
 
 # --- Proto Management ---
 
-## lint: Run buf lint to check for AIP/Buf style violations
+## lint: Lint proto files and Go files
 lint:
 	@echo "Running buf lint..."
 	@$(BUF_BIN) lint
+	@echo "Linting go files..."
+	@golint ./...
 
-## format: Automatically format proto files to standard style
+## format: Format proto files and Go files
 format:
+	@echo "Formatting go files..."
+	@gofmt -s -w .
 	@echo "Formatting proto files..."
 	@$(BUF_BIN) format -w
 
@@ -65,7 +69,12 @@ db/init-test:
 db/shell:
 	@docker exec -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME)
 
-# --- Testing ---
+# --- CI ---
+
+## build: Build the application
+build:
+	@echo "Building the application..."
+	go build ./...
 
 ## test: Run unit tests
 test:

@@ -11,9 +11,8 @@ import (
 type Server struct {
 	totletasksv1connect.UnimplementedGoalServiceHandler
 	totletasksv1connect.UnimplementedBingoServiceHandler
-
-	GoalService  *domain.GoalService
-	BingoService *domain.BingoService
+	goalService  GoalProvider
+	bingoService BingoProvider
 }
 
 // NewServer returns a new Server instance.
@@ -26,7 +25,7 @@ func NewServer(goalService *domain.GoalService, bingoService *domain.BingoServic
 	}
 
 	return &Server{
-		GoalService:  goalService,
-		BingoService: bingoService,
+		goalService:  goalService,
+		bingoService: bingoService,
 	}, nil
 }
