@@ -13,7 +13,7 @@ func (s *BingoService) CreateBingoCard(ctx context.Context, newCard *BingoCard) 
 }
 
 // GetBingoCard retrieves the bingo card for a specific year and month.
-func (s *BingoService) GetBingoCard(ctx context.Context, year int32, month int32) (*BingoCard, error) {
+func (s *BingoService) GetBingoCard(ctx context.Context, cardID string) (*BingoCard, error) {
 	return &BingoCard{}, nil
 }
 
