@@ -7,17 +7,39 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Go environment
         uses: actions/setup-go@v5
         with:
-          go-version: "go.mod"
+          go-version-file: "go.mod"
+          cache: true
+
+      - name: Download Go modules
+        run: go mod download
+
+      - name: Run tests
+        run: go test -v ./...
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
           cache: true
 
       - name: Download Go modules
@@ -25,6 +47,3 @@ jobs:
 
       - name: Build project
         run: go build -v ./...
-
-      - name: Run tests
-        run: go test -v ./...
