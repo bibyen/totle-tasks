@@ -11,16 +11,28 @@ import (
 	"golang.org/x/net/http2/h2c"
 
 	// Replace with your actual module path
+	"github.com/bibyen/totle-tasks/internal/domain"
 	"github.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1/totletasksv1connect"
+	"github.com/bibyen/totle-tasks/internal/server"
 )
 
 func main() {
+
+
+	// Initialise server
+	goalService := domain.GoalService{}
+	bingoService := domain.BingoService{}
+	server, err := server.NewServer(&goalService, &bingoService)
+	if err != nil {
+		log.Fatalf("failed to create server: %v", err)
+	}
+
 	mux := http.NewServeMux()
 
 	// Register Connect Service
-	path, handler := totletasksv1connect.NewGoalServiceHandler(&goalServer{})
+	path, handler := totletasksv1connect.NewGoalServiceHandler(server)
 	mux.Handle(path, handler)
-	path, handler = totletasksv1connect.NewBingoServiceHandler(&bingoServer{})
+	path, handler = totletasksv1connect.NewBingoServiceHandler(server)
 	mux.Handle(path, handler)
 
 	// Register Health Service - to report service health status
@@ -42,21 +54,11 @@ func main() {
 	// Start the H2C Server
 	port := "8080"
 	log.Printf("Starting Connect server on :%s", port)
-	err := http.ListenAndServe(
+	err = http.ListenAndServe(
 		fmt.Sprintf(":%s", port),
 		h2c.NewHandler(mux, &http2.Server{}), // Allows us to use HTTP/2 without TLS
 	)
 	if err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-}
-
-// goalServer is minimal implementation for the GoalService
-type goalServer struct {
-	totletasksv1connect.UnimplementedGoalServiceHandler
-}
-
-// bingoServer is a minimal implementation for the BingoService
-type bingoServer struct {
-	totletasksv1connect.UnimplementedBingoServiceHandler
 }
