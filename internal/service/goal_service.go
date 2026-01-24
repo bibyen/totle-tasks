@@ -10,7 +10,7 @@ import (
 type GoalService struct{}
 
 // CreateGoal creates a new Goal for the authenticated user.
-func (s *GoalService) CreateGoal(ctx context.Context, newGoal domain.Goal) (*domain.Goal, error) {
+func (s *GoalService) CreateGoal(ctx context.Context, newGoal *domain.Goal) (*domain.Goal, error) {
 	return &domain.Goal{}, nil
 }
 
@@ -26,7 +26,7 @@ func (s *GoalService) ListGoals(ctx context.Context, parentID string) ([]*domain
 }
 
 // UpdateGoal updates specific fields of an existing Goal using a FieldMask.
-func (s *GoalService) UpdateGoal(ctx context.Context, goalID string, goal domain.Goal, update map[string]any) (*domain.Goal, error) {
+func (s *GoalService) UpdateGoal(ctx context.Context, goalID string, goal *domain.Goal, update map[string]any) (*domain.Goal, error) {
 	return &domain.Goal{}, nil
 }
 
