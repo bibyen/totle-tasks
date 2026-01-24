@@ -1,6 +1,6 @@
 # Health & Reflection Guide
 
-The server implements the Connect RPC Health and Reflection protocols to support health monitoring and dynamic API discovery.
+The server implements the Connect RPC [Health](https://github.com/connectrpc/grpchealth-go) and [Reflection](https://github.com/connectrpc/grpcreflect-go) protocols to support health monitoring and dynamic API discovery.
 
 This guide assumes the server is running locally.
 
