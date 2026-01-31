@@ -18,7 +18,6 @@ import (
 
 func main() {
 
-
 	// Initialise server
 	goalService := domain.GoalService{}
 	bingoService := domain.BingoService{}
