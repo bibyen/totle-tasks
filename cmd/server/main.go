@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,16 +11,35 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
-	// Replace with your actual module path
 	"github.com/bibyen/totle-tasks/internal/domain"
 	"github.com/bibyen/totle-tasks/internal/pb/totle_tasks/v1/totletasksv1connect"
+	"github.com/bibyen/totle-tasks/internal/repository/postgres"
 	"github.com/bibyen/totle-tasks/internal/server"
+	_ "github.com/lib/pq"
 )
 
+func setupDatabase() (*sql.DB, error) {
+	// Replace with your actual database connection string
+	connStr := "postgres://user:pass@localhost:5432/totletasks?sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
+	}
+	
+	return db, nil
+}
+
 func main() {
+	// Set up dependencies (e.g., database connections) here
+	db, err := setupDatabase()
+	if err != nil {
+		log.Fatalf("Database setup failed: %v", err)
+	}
 
 	// Initialise server
-	goalService := domain.GoalService{}
+	goalService := domain.GoalService{
+		GoalRepoProvider: postgres.NewGoalRepo(db),
+	}
 	bingoService := domain.BingoService{}
 	server, err := server.NewServer(&goalService, &bingoService)
 	if err != nil {
