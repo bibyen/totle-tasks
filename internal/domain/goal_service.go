@@ -41,7 +41,6 @@ func (s *GoalService) CreateGoal(ctx context.Context, newGoal *Goal) (*Goal, err
 	// 	return nil, connect.NewError(connect.CodePermissionDenied, errors.New("cannot create goal for another user"))
 	// }
 
-
 	// Attempt to save the new goal
 	log.Default().Println("Saving new goal for user:", newGoal.UserID)
 	err := s.GoalRepoProvider.Create(ctx, newGoal)

@@ -23,7 +23,7 @@ func (r *GoalRepo) Create(ctx context.Context, g *domain.Goal) error {
 		return fmt.Errorf("goal cannot be nil")
 	}
 	log.Default().Println("GoalRepo.Create called with goal:", g)
-	
+
 	query := `
 		INSERT INTO goals (goal_id, user_id, title, completed, visibility, is_active, is_assigned)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)

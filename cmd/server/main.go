@@ -25,7 +25,7 @@ func setupDatabase() (*sql.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
-	
+
 	return db, nil
 }
 

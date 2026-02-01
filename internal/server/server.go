@@ -37,17 +37,17 @@ func NewServer(goalService *domain.GoalService, bingoService *domain.BingoServic
 // CreateGoal handles the CreateGoal RPC.
 func (s Server) CreateGoal(ctx context.Context, req *connect.Request[totletasksv1.CreateGoalRequest]) (*connect.Response[totletasksv1.CreateGoalResponse], error) {
 	switch {
-		case req == nil:
-			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request cannot be nil"))
-		case req.Msg == nil:
-			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request message cannot be nil"))
-		case req.Msg.Goal == nil:
-			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("goal cannot be nil"))
+	case req == nil:
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request cannot be nil"))
+	case req.Msg == nil:
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request message cannot be nil"))
+	case req.Msg.Goal == nil:
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("goal cannot be nil"))
 	}
 
 	// Transform request to domain Goal
 	goal := domain.Goal{
-		ID:         "placeholder-id", // Generate a new ID for the goal
+		ID:         "placeholder-id",      // Generate a new ID for the goal
 		UserID:     "placeholder-user-id", // TODO: Extract from auth context
 		Title:      req.Msg.Goal.Title,
 		Completed:  req.Msg.Goal.Completed,
@@ -65,12 +65,12 @@ func (s Server) CreateGoal(ctx context.Context, req *connect.Request[totletasksv
 
 	return connect.NewResponse(&totletasksv1.CreateGoalResponse{
 		Goal: &totletasksv1.Goal{
-		Name:       createdGoal.ID,
-		Title:      createdGoal.Title,
-		Completed:  createdGoal.Completed,
-		Visibility: totletasksv1.Goal_Visibility(createdGoal.Visibility),
-		CreateTime: timestamppb.New(createdGoal.CreateTime),
-		UpdateTime: timestamppb.New(createdGoal.UpdateTime),
+			Name:       createdGoal.ID,
+			Title:      createdGoal.Title,
+			Completed:  createdGoal.Completed,
+			Visibility: totletasksv1.Goal_Visibility(createdGoal.Visibility),
+			CreateTime: timestamppb.New(createdGoal.CreateTime),
+			UpdateTime: timestamppb.New(createdGoal.UpdateTime),
 		},
 	}), nil
 }
