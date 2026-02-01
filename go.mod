@@ -6,6 +6,7 @@ require (
 	connectrpc.com/connect v1.19.1
 	connectrpc.com/grpchealth v1.4.0
 	connectrpc.com/grpcreflect v1.3.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/net v0.47.0
