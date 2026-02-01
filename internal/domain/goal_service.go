@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"connectrpc.com/connect"
@@ -11,35 +12,49 @@ import (
 
 // Contained in the server in internal/server/server.go
 type GoalService struct {
-	goalRepoProvider GoalRepoProvider
+	GoalRepoProvider GoalRepoProvider
 }
 
 // CreateGoal creates a new Goal for the authenticated user.
 // Users can only create goals for themself.
 func (s *GoalService) CreateGoal(ctx context.Context, newGoal *Goal) (*Goal, error) {
-
-	// Extract user id
-	userID, ok := auth.GetIdentityFromContext(ctx)
-	if !ok {
-		return nil, connect.NewError(connect.CodeUnauthenticated, errors.New("identity not found"))
+	switch {
+	case newGoal == nil:
+		return nil, fmt.Errorf("goal cannot be nil")
+	case newGoal.ID == "":
+		return nil, fmt.Errorf("goal ID cannot be empty")
+	case newGoal.UserID == "":
+		return nil, fmt.Errorf("user ID cannot be empty")
+	case newGoal.Title == "":
+		return nil, fmt.Errorf("goal title cannot be empty")
 	}
+	log.Default().Println("GoalService.CreateGoal called with goal:", newGoal)
 
-	// Ensure user is creating goal for self
-	if userID != newGoal.UserID {
-		return nil, connect.NewError(connect.CodePermissionDenied, errors.New("cannot create goal for another user"))
-	}
+	// // Extract user id
+	// userID, ok := auth.GetIdentityFromContext(ctx)
+	// if !ok {
+	// 	return nil, connect.NewError(connect.CodeUnauthenticated, errors.New("identity not found"))
+	// }
+
+	// // Ensure user is creating goal for self
+	// if userID != newGoal.UserID {
+	// 	return nil, connect.NewError(connect.CodePermissionDenied, errors.New("cannot create goal for another user"))
+	// }
+
 
 	// Attempt to save the new goal
-	err := s.goalRepoProvider.Create(ctx, newGoal)
+	log.Default().Println("Saving new goal for user:", newGoal.UserID)
+	err := s.GoalRepoProvider.Create(ctx, newGoal)
 	if err != nil {
 		// TODO: Consider using a structured logger for better log management. https://github.com/bibyen/totle-tasks/issues/10
 		// Track metadata about the request + error
 		// e.g., timestamp, userID, goal details (excluding sensitive info), error message
-		log.Printf("Internal error creating goal (%v) for user %s: %v", *newGoal, userID, err)
-		return nil, connect.NewError(connect.CodeInternal, errors.New("unable to save goal, please try again later"))
+		// log.Printf("Internal error creating goal (%v) for user %s: %v", *newGoal, userID, err)
+		return nil, fmt.Errorf(("unable to save goal, please try again later"))
 	}
+	log.Default().Println("Successfully created goal with ID:", newGoal.ID)
 
-	return &Goal{}, nil
+	return newGoal, nil
 }
 
 // GetGoal retrieves a specific Goal by its unique resource name.
@@ -53,7 +68,7 @@ func (s *GoalService) GetGoal(ctx context.Context, goalID string) (*Goal, error)
 
 	// Ensure user is fetching goal for self
 	// Fetch the goal
-	goal, err := s.goalRepoProvider.GetByID(ctx, goalID)
+	goal, err := s.GoalRepoProvider.GetByID(ctx, goalID)
 	if err != nil { // Log the error for internal tracking
 		// TODO: Consider using a structured logger for better log management. https://github.com/bibyen/totle-tasks/issues/10
 		// Track metadata about the request + error
