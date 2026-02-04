@@ -74,3 +74,21 @@ func (s Server) CreateGoal(ctx context.Context, req *connect.Request[totletasksv
 		},
 	}), nil
 }
+
+// GetGoal handles the GetGoal RPC.
+func (s Server) GetGoal(ctx context.Context, req *connect.Request[totletasksv1.GetGoalRequest]) (*connect.Response[totletasksv1.GetGoalResponse], error) {
+	goal, err := s.goalService.GetGoal(ctx, "goal-id-placeholder")
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to get goal: %w", err))
+	}
+	return connect.NewResponse(&totletasksv1.GetGoalResponse{
+		Goal: &totletasksv1.Goal{
+			Name:       goal.ID,
+			Title:      goal.Title,
+			Completed:  goal.Completed,
+			Visibility: totletasksv1.Goal_Visibility(goal.Visibility),
+			CreateTime: timestamppb.New(goal.CreateTime),
+			UpdateTime: timestamppb.New(goal.UpdateTime),
+		},
+	}), nil
+}
