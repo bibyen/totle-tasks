@@ -20,7 +20,7 @@ export default function TodayPage({ params }: PageProps) {
     <MobileView>
       {/* Header: Indigo Background, White Text */}
       <header className="p-6 bg-indigo-600 text-white">
-        <h1 className="text-lg font-bold tracking-tight">Daily 24</h1>
+        <h1 className="text-lg font-bold tracking-tight">Goals this month:</h1>
         <p className="text-xs opacity-80 font-mono mt-1">UID: {userId}</p>
       </header>
 
