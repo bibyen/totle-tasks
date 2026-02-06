@@ -3,9 +3,17 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "**.go"
+      - "**.mod"
+      - "**.sum"
   pull_request:
     branches:
       - main
+    paths:
+      - "**.go"
+      - "**.mod"
+      - "**.sum"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
