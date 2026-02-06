@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/bibyen/totle-tasks/internal/domain"
 )
@@ -18,15 +19,25 @@ func NewGoalRepo(db *sql.DB) *GoalRepo {
 }
 
 func (r *GoalRepo) Create(ctx context.Context, g *domain.Goal) error {
+	if g == nil {
+		return fmt.Errorf("goal cannot be nil")
+	}
+	log.Default().Println("GoalRepo.Create called with goal:", g)
+
 	query := `
 		INSERT INTO goals (goal_id, user_id, title, completed, visibility, is_active, is_assigned)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING create_time, update_time
 	`
 
-	return r.db.QueryRowContext(ctx, query,
+	err := r.db.QueryRowContext(ctx, query,
 		g.ID, g.UserID, g.Title, g.Completed, g.Visibility, g.IsActive, g.IsAssigned,
 	).Scan(&g.CreateTime, &g.UpdateTime)
+
+	if err != nil {
+		return fmt.Errorf("failed to create goal: %w", err)
+	}
+	return nil
 }
 
 func (r *GoalRepo) List(ctx context.Context, userID string) ([]*domain.Goal, error) {
